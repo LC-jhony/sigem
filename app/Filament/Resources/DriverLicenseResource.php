@@ -92,15 +92,21 @@ class DriverLicenseResource extends Resource
             ->defaultPaginationPageOption(5)
             ->searchable()
             ->columns([
-                Tables\Columns\TextColumn::make('driver.name')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('driver.full_name')
+                    ->label('Chofer')
+                    ->getStateUsing(fn($record) => $record->driver->name . ' ' . $record->driver->last_paternal_name . ' ' . $record->driver->last_maternal_name)
+                    ->searchable(['drivers.name', 'drivers.last_paternal_name', 'drivers.last_maternal_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('license_number')
+                    ->label('Número Licencia')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('expiration_date')
+                    ->label('Fecha Vencimiento')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('license_type')
+                    ->label('Tipo Licencia')
+                    ->badge()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status_label')
                     ->label('Estado')
@@ -144,14 +150,17 @@ class DriverLicenseResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Creado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Actualizado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Eliminado')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
