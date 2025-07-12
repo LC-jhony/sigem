@@ -8,8 +8,13 @@
     "require": {
         "php": "^8.2",
         "alperenersoy/filament-export": "^3.0",
+        "asmit/filament-upload": "^1.0",
+        "davidhsianturi/blade-bootstrap-icons": "^2.1",
+        "diogogpinto/filament-auth-ui-enhancer": "^1.0",
         "eightynine/filament-excel-import": "^3.1",
         "filament/filament": "^3.3",
+        "hugomyb/filament-media-action": "^3.1",
+        "joaopaulolndev/filament-pdf-viewer": "^1.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "pxlrbt/filament-excel": "^2.4"
