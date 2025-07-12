@@ -169,9 +169,8 @@ class DriverResource extends Resource
                 MediaAction::make('pdf')
                     ->label('')
                     ->media(fn($record) => $record->file ? asset('storage/' . $record->file) : null)
-                    // ->iconButton()
                     ->icon('bi-file-pdf-fill')
-                    ->color('danger'),
+                    ->visible(fn($record) => !empty($record->file)),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),

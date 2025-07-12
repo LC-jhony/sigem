@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Cargo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Driver extends Model
@@ -25,5 +26,12 @@ class Driver extends Model
     public function cargo()
     {
         return $this->belongsTo(Cargo::class);
+    }
+    public function driverLicenses(): HasMany
+    {
+        return $this->hasMany(
+            related: DriverLicense::class,
+            foreignKey: 'driver_id',
+        );
     }
 }
