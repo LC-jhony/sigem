@@ -17,6 +17,7 @@
         "joaopaulolndev/filament-pdf-viewer": "^1.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
+        "postare/blade-mdi": "^1.1",
         "pxlrbt/filament-excel": "^2.4"
     },
     "require-dev": {
