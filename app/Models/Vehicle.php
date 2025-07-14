@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicle extends Model
@@ -17,4 +18,12 @@ class Vehicle extends Model
         'year',
         'status',
     ];
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(
+            related: Document::class,
+            foreignKey: 'vehicle_id',
+        );
+    }
 }

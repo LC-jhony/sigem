@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('modelo');
             $table->string('marca');
             $table->string('year');
+            $table->string('property_card');
             $table->enum('status', [
                 'Operativo',
                 'En Mantenimiento',

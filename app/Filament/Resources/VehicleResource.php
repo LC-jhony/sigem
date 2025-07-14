@@ -2,18 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Enum\VeicleStatus;
-use App\Filament\Resources\VehicleResource\Pages;
-use App\Filament\Resources\VehicleResource\RelationManagers;
-use App\Models\Vehicle;
+use App\Enum\DocumentName;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\FormsComponent;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Vehicle;
+use Filament\Forms\Form;
+use App\Enum\VeicleStatus;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\FormsComponent;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\VehicleResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\VehicleResource\RelationManagers;
+use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
 
 class VehicleResource extends Resource
 {
@@ -42,23 +44,57 @@ class VehicleResource extends Resource
                             ->label('Modelo')
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\TextInput::make('marca')
-                            ->label('Marca')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('year')
-                            ->label('Año')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\Card::make()
+                        Forms\Components\Grid::make()
+                            ->columns(3)
                             ->schema([
-                                Forms\Components\CheckboxList::make('status')
+                                Forms\Components\TextInput::make('marca')
+                                    ->label('Marca')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('year')
+                                    ->label('Año')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\Select::make('status')
                                     ->label('Estado del Vehículo')
                                     ->options(VeicleStatus::class)
                                     ->required()
-                                    ->columns(3)
-                                    ->gridDirection('row'),
+                                    ->native(false)
                             ])
+                    ]),
+                Forms\Components\Section::make('Documentos del Vehículo')
+                    ->description('Ingrese los documentos del vehículo')
+                    ->icon('bi-file-pdf-fill')
+                    ->schema([
+                        Forms\Components\Repeater::make('documents')
+                            ->label('')
+                            ->relationship()
+                            ->schema([
+                                Forms\Components\Grid::make()
+                                    ->columns(2)
+                                    ->schema([
+                                        Forms\Components\DatePicker::make('date')
+                                            ->label('Fecha de Vencimiento')
+                                            ->format('d/m/Y')
+                                            ->timezone('America/Lima')
+                                            ->displayFormat('d/m/Y')
+                                            ->locale('es')
+                                            ->native(false),
+                                        Forms\Components\Select::make('name')
+                                            ->label('Tipo de Documento')
+                                            ->options(DocumentName::class)
+                                            ->native(false)
+                                            ->required(),
+                                    ]),
+                                AdvancedFileUpload::make('file')
+                                    ->label('Documento')
+                                    ->label('Documento')
+                                    ->default(null)
+                                    ->visibility('public')
+                                    ->directory('DocumentsVehicle')
+                                    ->acceptedFileTypes(['application/pdf']),
+                            ]),
+
 
                     ])
             ]);
@@ -67,6 +103,10 @@ class VehicleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
+            ->paginated([5, 10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(5)
+            ->searchable()
             ->columns([
                 Tables\Columns\TextColumn::make('placa')
                     ->label('Placa')

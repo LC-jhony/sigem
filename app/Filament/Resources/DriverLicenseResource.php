@@ -189,6 +189,7 @@ class DriverLicenseResource extends Resource
                         'critico' => 'Crítico',        // Licencias con 3 días o menos
                         'vencido' => 'Vencido',        // Licencias ya vencidas
                     ])
+                    ->native(false)
 
                     /**
                      * Query personalizada que se ejecuta cuando se selecciona una opción
