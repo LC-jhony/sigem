@@ -2,11 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Enum\DocumentName;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Vehicle;
 use Filament\Forms\Form;
+use App\Enum\DocumentName;
 use App\Enum\VeicleStatus;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
@@ -16,6 +17,7 @@ use App\Filament\Resources\VehicleResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
+use Illuminate\Support\Facades\Log;
 
 class VehicleResource extends Resource
 {
@@ -36,23 +38,31 @@ class VehicleResource extends Resource
                     ->icon('heroicon-o-rectangle-stack')
                     ->columns(2)
                     ->schema([
-                        Forms\Components\TextInput::make('placa')
-                            ->label('Placa')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('modelo')
-                            ->label('Modelo')
-                            ->required()
-                            ->maxLength(255),
                         Forms\Components\Grid::make()
                             ->columns(3)
                             ->schema([
+                                Forms\Components\TextInput::make('code')
+                                    ->label('PROG.')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('placa')
+                                    ->label('Placa')
+                                    ->required()
+                                    ->maxLength(255),
                                 Forms\Components\TextInput::make('marca')
                                     ->label('Marca')
                                     ->required()
                                     ->maxLength(255),
-                                Forms\Components\TextInput::make('year')
-                                    ->label('Año')
+                            ]),
+                        Forms\Components\Grid::make()
+                            ->columns(3)
+                            ->schema([
+                                Forms\Components\TextInput::make('unidad')
+                                    ->label('Unidad')
+                                    ->required()
+                                    ->maxLength(255),
+                                Forms\Components\TextInput::make('property_card')
+                                    ->label('Tarjeta de Propiedad')
                                     ->required()
                                     ->maxLength(255),
                                 Forms\Components\Select::make('status')
@@ -75,7 +85,6 @@ class VehicleResource extends Resource
                                     ->schema([
                                         Forms\Components\DatePicker::make('date')
                                             ->label('Fecha de Vencimiento')
-                                            ->format('d/m/Y')
                                             ->timezone('America/Lima')
                                             ->displayFormat('d/m/Y')
                                             ->locale('es')
@@ -108,19 +117,142 @@ class VehicleResource extends Resource
             ->defaultPaginationPageOption(5)
             ->searchable()
             ->columns([
+                Tables\Columns\TextColumn::make('code')
+                    ->label('PROG.')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('placa')
                     ->label('Placa')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('modelo')
-                    ->label('Modelo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('marca')
                     ->label('Marca')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('year')
-                    ->label('Año')
+                Tables\Columns\TextColumn::make('unidad')
+                    ->label('Unidad')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('property_card')
+                    ->label('Tar. Propiedad')
                     ->searchable()
                     ->badge(),
+                Tables\Columns\TextColumn::make('soat')
+                    ->label('SOAT')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            if (!$documentSoat = $record->documents->firstWhere('name', 'SOAT')) {
+                                return 'no-document';
+                            }
+
+                            return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
+                        } catch (\Exception $e) {
+                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            return 'invalid-date';
+                        }
+                    })
+                    ->formatStateUsing(fn($state) => match (true) {
+                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'invalid-date' => 'Fecha inválida',
+                        default => $state?->format('d/m/Y') ?? 'Sin fecha'
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        if (!is_object($state)) return 'gray';
+
+                        $dias = now()->diffInDays($state, false);
+                        return match (true) {
+                            $dias < 0 || $dias <= 7 => 'danger',
+                            $dias <= 30 => 'warning',
+                            default => 'success'
+                        };
+                    }),
+                Tables\Columns\TextColumn::make('tarjeta')
+                    ->label('Tarjeta')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            if (!$documentSoat = $record->documents->firstWhere('name', 'TARJETA DE CIRCULACION')) {
+                                return 'no-document';
+                            }
+
+                            return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
+                        } catch (\Exception $e) {
+                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            return 'invalid-date';
+                        }
+                    })
+                    ->formatStateUsing(fn($state) => match (true) {
+                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'invalid-date' => 'Fecha inválida',
+                        default => $state?->format('d/m/Y') ?? 'Sin fecha'
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        if (!is_object($state)) return 'gray';
+
+                        $dias = now()->diffInDays($state, false);
+                        return match (true) {
+                            $dias < 0 || $dias <= 7 => 'danger',
+                            $dias <= 30 => 'warning',
+                            default => 'success'
+                        };
+                    }),
+                Tables\Columns\TextColumn::make('revision')
+                    ->label('Revision')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            if (!$documentSoat = $record->documents->firstWhere('name', 'REVICION TECNICA')) {
+                                return 'no-document';
+                            }
+
+                            return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
+                        } catch (\Exception $e) {
+                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            return 'invalid-date';
+                        }
+                    })
+                    ->formatStateUsing(fn($state) => match (true) {
+                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'invalid-date' => 'Fecha inválida',
+                        default => $state?->format('d/m/Y') ?? 'Sin fecha'
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        if (!is_object($state)) return 'gray';
+
+                        $dias = now()->diffInDays($state, false);
+                        return match (true) {
+                            $dias < 0 || $dias <= 7 => 'danger',
+                            $dias <= 30 => 'warning',
+                            default => 'success'
+                        };
+                    }),
+                Tables\Columns\TextColumn::make('poliza')
+                    ->label('Poliza')
+                    ->getStateUsing(function ($record) {
+                        try {
+                            if (!$documentSoat = $record->documents->firstWhere('name', 'POLIZA DE SEGURO VEHICULAR')) {
+                                return 'no-document';
+                            }
+
+                            return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
+                        } catch (\Exception $e) {
+                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            return 'invalid-date';
+                        }
+                    })
+                    ->formatStateUsing(fn($state) => match (true) {
+                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'invalid-date' => 'Fecha inválida',
+                        default => $state?->format('d/m/Y') ?? 'Sin fecha'
+                    })
+                    ->badge()
+                    ->color(function ($state) {
+                        if (!is_object($state)) return 'gray';
+
+                        $dias = now()->diffInDays($state, false);
+                        return match (true) {
+                            $dias < 0 || $dias <= 7 => 'danger',
+                            $dias <= 30 => 'warning',
+                            default => 'success'
+                        };
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
                     ->searchable()
@@ -133,7 +265,8 @@ class VehicleResource extends Resource
                         'Disponible' => 'info',
                         'En Uso' => 'success',
                         default => 'primary',
-                    }),
+                    })
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()

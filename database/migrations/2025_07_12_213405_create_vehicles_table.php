@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('placa')->unique();
-            $table->string('modelo');
             $table->string('marca');
-            $table->string('year');
+            $table->string('unidad');
             $table->string('property_card');
             $table->enum('status', [
                 'Operativo',

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('vehicle_id');
             $table->foreign('vehicle_id')->references('id')->on('vehicles');
-            $table->string('date');
+            $table->date('date');
             $table->enum('name', ['SOAT', 'TARJETA DE CIRCULACION', 'REVICION TECNICA', 'POLIZA DE SEGURO VEHICULAR']);
             $table->string('file');
             $table->timestamps();

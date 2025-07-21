@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,51 +17,29 @@ class VehicleFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'placa' => fake()->unique()->regexify('[A-Z]{3}[0-9]{3}'),
-            'modelo' => fake()->randomElement([
-                'Camión Minero',
-                'Excavadora',
-                'Cargador Frontal',
-                'Bulldozer',
-                'Camión Volquete',
-                'Grúa Móvil',
-                'Perforadora',
-                'Motoniveladora',
-                'Compactadora',
-                'Camión Cisterna',
-                'Retroexcavadora',
-                'Tractor Oruga',
-                'Camión de Servicio',
-                'Ambulancia Minera',
-                'Camioneta 4x4'
-            ]),
-            'marca' => fake()->randomElement([
-                'Caterpillar',
-                'Komatsu',
-                'Volvo',
-                'Liebherr',
-                'Hitachi',
-                'John Deere',
-                'Case',
-                'JCB',
-                'Scania',
-                'Mercedes-Benz',
-                'Iveco',
-                'Ford',
-                'Toyota',
-                'Nissan',
-                'Chevrolet'
-            ]),
-            'year' => fake()->numberBetween(2010, 2024),
-            'status' => fake()->randomElement([
-                'Operativo',
-                'En Mantenimiento',
-                'Fuera de Servicio',
-                'En Reparación',
-                'Disponible',
-                'En Uso'
-            ]),
+        $statusOptions = [
+            'Operativo',
+            'En Mantenimiento',
+            'Fuera de Servicio',
+            'En Reparación',
+            'Disponible',
+            'En Uso'
         ];
+        return [
+            'code' => strtoupper($this->faker->bothify('???##')), // Ej: ABC12
+            'placa' => $this->generateUniquePlaca(),
+            'marca' => $this->faker->randomElement(['Toyota', 'Nissan', 'Hyundai', 'Ford', 'Chevrolet', 'Kia']),
+            'unidad' => $this->faker->word . ' ' . $this->faker->randomElement(['Model X', '2023', 'Turbo', 'Premium']),
+            'property_card' => $this->faker->unique()->numerify('PC-#####'),
+            'status' => $this->faker->randomElement($statusOptions),
+        ];
+    }
+    private function generateUniquePlaca()
+    {
+        do {
+            $placa = strtoupper($this->faker->regexify('[A-Z]{3}-[0-9]{3}')); // Formato: ABC-123
+        } while (Vehicle::where('placa', $placa)->exists());
+
+        return $placa;
     }
 }

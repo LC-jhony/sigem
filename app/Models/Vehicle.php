@@ -12,10 +12,11 @@ class Vehicle extends Model
     /** @use HasFactory<\Database\Factories\VehicleFactory> */
     use HasFactory, SoftDeletes;
     protected $fillable = [
+        'code',
         'placa',
-        'modelo',
         'marca',
-        'year',
+        'unidad',
+        'property_card',
         'status',
     ];
 

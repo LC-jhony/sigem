@@ -63,23 +63,34 @@
                     <x-th>Fecha Vencimiento</x-th>
                     <x-th>Vence en Días</x-th>
                 </tr>
+
             </x-slot>
-            <tr>
-                <x-td>1</x-td>
-                <x-td>2</x-td>
-                <x-td>3</x-td>
-                <x-td>4</x-td>
-                <x-td>5</x-td>
-                <x-td>6</x-td>
-                <x-td>7</x-td>
-                <x-td>8</x-td>
-                <x-td>9w</x-td>
-                <x-td>10</x-td>
-                <x-td>11</x-td>
-                <x-td>12</x-td>
-                <x-td>13</x-td>
-                <x-td>14</x-td>
+            @foreach($vehicles as $index => $vehicle)
+            <tr class="fi-ta-row transition duration-75 hover:bg-gray-50 dark:hover:bg-white/5 
+                       {{ $index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800' }}">
+                <x-td>{{ $vehicle->id }}</x-td>
+                <x-td>{{ $vehicle->program }}</x-td>
+                <x-td>{{ $vehicle->placa }}</x-td>
+                <x-td>{{ $vehicle->marca }}</x-td>
+                <x-td>{{ $vehicle->modelo }}</x-td>
+                <x-td>{{ $vehicle->year }}</x-td>
+                {{-- SOAT --}}
+                <x-td>{{ $vehicle->documents->where('name', 'SOAT')->first()?->date ?? '' }}</x-td>
+                <x-td>{{ $vehicle->days_to_expire_soat }}</x-td>
+
+                {{-- TARJETA DE CIRCULACION --}}
+                <x-td>{{ $vehicle->documents->where('name', 'TARJETA DE CIRCULACION')->first()?->date ?? '' }}</x-td>
+                <x-td>{{ $vehicle->days_to_expire_circulation }}</x-td>
+
+                {{-- REVISION TECNICA --}}
+                <x-td>{{ $vehicle->documents->where('name', 'REVICION TECNICA')->first()?->date ?? '' }}</x-td>
+                <x-td>{{ $vehicle->days_to_expire_technical }}</x-td>
+
+                {{-- POLIZA DE SEGURO VEHICULAR --}}
+                <x-td>{{ $vehicle->documents->where('name', 'POLIZA DE SEGURO VEHICULAR')->first()?->date ?? '' }}</x-td>
+                <x-td>{{ $vehicle->days_to_expire_property }}</x-td>
             </tr>
+            @endforeach
         </x-table>
     </x-container>
 </x-filament-panels::page>
