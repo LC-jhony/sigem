@@ -12,12 +12,13 @@ use App\Enum\VeicleStatus;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\FormsComponent;
+use Illuminate\Support\Facades\Log;
+use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\VehicleResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VehicleResource\RelationManagers;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
-use Illuminate\Support\Facades\Log;
 
 class VehicleResource extends Resource
 {
@@ -287,11 +288,15 @@ class VehicleResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->color('primary'),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
