@@ -9,6 +9,7 @@ export default {
         './resources/**/*.js',
         './resources/**/*.vue',
         './vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php',
+        './vendor/andrewdwallo/filament-selectify/resources/views/**/*.blade.php', // The package's vendor directory
 
     ],
     theme: {

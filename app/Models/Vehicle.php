@@ -27,4 +27,11 @@ class Vehicle extends Model
             foreignKey: 'vehicle_id',
         );
     }
+    public function maintenances(): HasMany
+    {
+        return $this->hasMany(
+            related: Maintenance::class,
+            foreignKey: 'vehicle_id',
+        );
+    }
 }

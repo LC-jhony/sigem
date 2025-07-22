@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "alperenersoy/filament-export": "^3.0",
+        "andrewdwallo/filament-selectify": "^2.0",
         "asmit/filament-upload": "^1.0",
         "davidhsianturi/blade-bootstrap-icons": "^2.1",
         "diogogpinto/filament-auth-ui-enhancer": "^1.0",

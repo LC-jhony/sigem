@@ -13,6 +13,12 @@ class ListVehicles extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('pdf')
+                ->label('Exportar PDF')
+                ->color('primary'),
+            Actions\Action::make('Excel')
+                ->label('Exportar Excel')
+                ->color('primary'),
             Actions\CreateAction::make()
                 ->icon('heroicon-o-squares-plus'),
         ];

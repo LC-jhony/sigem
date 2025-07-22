@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\FormsComponent;
 use Illuminate\Support\Facades\Log;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\VehicleResource\Pages;
@@ -288,7 +289,16 @@ class VehicleResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                
+                Tables\Actions\Action::make('view_maintenances')
+                    ->label('Mantenimientos')
+                    ->icon('heroicon-o-wrench-screwdriver')
+                    ->modalContent(function ($record) {
+                        return view('livewire.mantenance_modal', ['record' => $record]);
+                    })
+                    ->slideOver(true)
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(false)
+                    ->modalWidth(MaxWidth::SevenExtraLarge),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()
