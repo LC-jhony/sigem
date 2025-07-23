@@ -175,12 +175,12 @@ class VehicleResource extends Resource
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en Tarjeta [Vehículo {$record->id}]: " . $e->getMessage());
                             return 'invalid-date';
                         }
                     })
                     ->formatStateUsing(fn($state) => match (true) {
-                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'no-document' => 'Sin TARJETA',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
@@ -205,12 +205,12 @@ class VehicleResource extends Resource
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en Revision [Vehículo {$record->id}]: " . $e->getMessage());
                             return 'invalid-date';
                         }
                     })
                     ->formatStateUsing(fn($state) => match (true) {
-                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'no-document' => 'Sin REVISIÓN',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
@@ -235,12 +235,12 @@ class VehicleResource extends Resource
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en POLIZA [Vehículo {$record->id}]: " . $e->getMessage());
                             return 'invalid-date';
                         }
                     })
                     ->formatStateUsing(fn($state) => match (true) {
-                        $state === 'no-document' => 'Sin SOAT',
+                        $state === 'no-document' => 'Sin POLIZA',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })

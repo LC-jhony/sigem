@@ -68,6 +68,17 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->sortable()
             ])
             ->headerActions([
+                Tables\Actions\Action::make('valued_pdf')
+                    ->label('Valorizado')
+                    ->icon('bi-file-pdf-fill')
+                    ->url(route('valuemantenacevehicle', $this->record->id))
+                    ->openUrlInNewTab(),
+                Tables\Actions\Action::make('maintenance_report')
+                    ->label('Historial')
+                    ->icon('heroicon-o-table-cells')
+                    ->color('danger')
+                    ->url(route('maintenacehistory', $this->record->id))
+                    ->openUrlInNewTab(),
                 CreateAction::make()
                     ->label('Nuevo Mantenimiento')
                     ->color('warning')
