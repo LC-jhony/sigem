@@ -292,6 +292,7 @@ class VehicleResource extends Resource
                 Tables\Actions\Action::make('view_maintenances')
                     ->label('Mantenimientos')
                     ->icon('heroicon-o-wrench-screwdriver')
+                    ->color('warning')
                     ->modalContent(function ($record) {
                         return view('livewire.mantenance_modal', ['record' => $record]);
                     })

@@ -126,35 +126,44 @@ class MaintenanceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->striped()
+            ->paginated([5, 10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(5)
+            ->searchable()
             ->columns([
                 Tables\Columns\TextColumn::make('vehicle.placa')
                     ->label('Vehiculo')
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('maintenanceItem.name')
                     ->label('Mantenimiento')
-                    ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('mileage')
                     ->label('KM')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('status')
                     ->label('Estado')
+                    ->searchable()
                     ->boolean(),
                 Tables\Columns\TextColumn::make('Price_material')
                     ->label('Precio Material')
                     ->prefix('S/.')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('workforce')
                     ->label('Mano de Obra')
                     ->prefix('S/.')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('maintenance_cost')
                     ->label('Costo Total')
                     ->prefix('S/.')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 // Tables\Columns\TextColumn::make('photo')
                 //     ->searchable(),
@@ -177,7 +186,11 @@ class MaintenanceResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('vehicle_id')
+                    ->label('Vehículo')
+                    ->options(Vehicle::all()->pluck('placa', 'id'))
+                    ->searchable()
+                    ->native(false),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
