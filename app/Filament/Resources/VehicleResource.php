@@ -295,9 +295,11 @@ class VehicleResource extends Resource
                     ->modalContent(function ($record) {
                         return view('livewire.mantenance_modal', ['record' => $record]);
                     })
+                    ->modalHeading(fn($record) => 'Vehiculo:   ' . $record->placa)
                     ->slideOver(true)
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false)
+
                     ->modalWidth(MaxWidth::SevenExtraLarge),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),

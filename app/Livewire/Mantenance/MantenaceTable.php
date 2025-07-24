@@ -9,6 +9,7 @@ use Livewire\Component;
 use App\Enum\MillageItems;
 use Filament\Tables\Table;
 use App\Models\MaintenanceItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Forms\Contracts\HasForms;
@@ -16,7 +17,9 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Support\RawJs;
+use Illuminate\Support\Collection;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Illuminate\Support\Facades\Blade;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
 
 class MantenaceTable extends Component implements HasForms, HasTable
@@ -34,6 +37,10 @@ class MantenaceTable extends Component implements HasForms, HasTable
             ->query(function () {
                 return $this->record->maintenances();
             })
+            ->striped()
+            ->paginated([5, 10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(5)
+            ->searchable()
             ->columns([
                 Tables\Columns\TextColumn::make('maintenanceItem.name')
                     ->label('Mantenimiento')
@@ -190,7 +197,37 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->options(MaintenanceItem::all()->pluck('name', 'id'))
                     ->native(false),
             ])
-            ->actions([]);
+            ->actions([])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\BulkAction::make('delete')
+                        ->label('Eliminar')
+                        ->icon('heroicon-o-trash')
+                        ->action(function (array $records) {
+                            foreach ($records as $record) {
+                                $record->delete();
+                            }
+                        })
+                        ->requiresConfirmation(),
+                    Tables\Actions\BulkAction::make('Valorizaado')
+                        ->label('Valorizado')
+                        ->icon('bi-file-pdf-fill')
+                        ->color('danger')
+                        ->openUrlInNewTab()
+                        ->deselectRecordsAfterCompletion()
+                        ->action(function (Collection $records) {
+                            $vehicle = $this->record; // Asegúrate de tener el vehículo actual
+                            return response()->streamDownload(function () use ($records, $vehicle) {
+                                echo Pdf::loadHtml(
+                                    Blade::render('pdf.value-maintenance', [
+                                        'records' => $records,
+                                        'vehicle' => $this->record,
+                                    ])
+                                )->stream();
+                            }, $vehicle->placa . '.pdf');
+                        })
+                ]),
+            ]);
     }
     public function render()
     {
