@@ -8,12 +8,18 @@
 
     <style>
         body {
-            padding-top: 70px;
+            padding-top: 60px;
             /* Espacio suficiente para el header fijo en TODAS las páginas */
             padding-bottom: 45px;
             /* Para no chocar con el footer */
         }
 
+        h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
 
         /** Margins for the PDF pages */
         @page {
@@ -151,6 +157,7 @@
             </div>
         </div>
     </header>
+
 
     <footer>
 
