@@ -1,13 +1,24 @@
 {{-- filepath: /home/ubuntu/Sites/sigem/resources/views/pdf/maintenance-history.blade.php --}}
 <x-layout>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <h1>PROGRAMA DE MANTENIMIENTO PREVENTIVO</h1>
-        <p>Fecha: {{ now()->format('d/m/Y') }}</p>
+    <div style="text-align: center; margin-bottom: 20px; nargin-top: -60px;">
+        <h3>Programa de Mantenimiento Vehicular</h3>
     </div>
-    <div style="margin-bottom: 10px;">
-        <span style="font-weight: bold; font-size: 16px;">Vehículo:</span>
-        <span style="font-size: 15px;">{{ $record->placa }}</span>
+    <div style="display: table; width: 100%;">
+        <!-- Columna izquierda: Datos del vehículo -->
+        <div style="display: table-cell; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; background-color: #fdfdfd; vertical-align: top;">
+            <div style="font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #111; border-bottom: 1px solid #ddd; padding-bottom: 4px;">
+                Vehículo
+            </div>
+
+            <div style="margin-bottom: 2px;"><strong>Placa:</strong> {{ $record->placa }}</div>
+            <div style="margin-bottom: 2px;"><strong>Marca:</strong> {{ $record->marca ?? '-' }}</div>
+            <div style="margin-bottom: 2px;"><strong>Unidad:</strong> {{ $record->unidad ?? '-' }}</div>
+            <div style="margin-bottom: 2px;"><strong>Tarjeta Propiedad:</strong> {{ $record->property_card ?? '-' }}</div>
+
+
+        </div>
     </div>
+    <br>
     <div style="overflow-x: auto;">
         <table width="100%">
             <thead style="background-color: #f2f2f2;">
@@ -36,7 +47,7 @@
                     @endphp
                     <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">
                         @if($hasMaintenance)
-                        <span style="color: green; font-weight: bold;">X</span>
+                        <span style="color: #636363ff; font-weight: bold;">X</span>
                         @endif
                     </td>
                     @endforeach
