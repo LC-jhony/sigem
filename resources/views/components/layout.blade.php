@@ -43,7 +43,6 @@
             left: 0px;
             right: 0px;
             height: 50px;
-
             padding: 10px 20px;
             font-size: 9pt;
             text-align: center;

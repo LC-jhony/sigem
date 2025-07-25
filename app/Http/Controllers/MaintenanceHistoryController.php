@@ -14,7 +14,7 @@ class MaintenanceHistoryController extends Controller
      */
     public function __invoke(Request $request, $id)
     {
-        $record = Vehicle::findOrFail($id);
+        $record = Vehicle::with('maintenances')->findOrFail($id);
         $maintenanceitems = MaintenanceItem::all();
         $pdf = Pdf::loadView('pdf.maintenance-history', compact(
             'record',

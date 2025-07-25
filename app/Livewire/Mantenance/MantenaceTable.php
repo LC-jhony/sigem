@@ -91,7 +91,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->color('warning')
                     ->icon('heroicon-o-plus-circle')
                     ->modalWidth(MaxWidth::SevenExtraLarge)
-                    //   ->slideOver(true)
+                    //->slideOver(true)
                     ->form([
                         Forms\Components\Section::make('Archivos')
                             ->columns(2)

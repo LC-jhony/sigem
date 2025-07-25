@@ -13,7 +13,7 @@ class ValueMaintenanceVehicleController extends Controller
      */
     public function __invoke(Request $request, $id)
     {
-        $record = Vehicle::findOrFail($id);
+        $record = Vehicle::with(['maintenances.maintenanceItem'])->findOrFail($id);
         $pdf = Pdf::loadView('pdf.value-mantenace-vehicle', [
             'record' => $record,
         ]);
