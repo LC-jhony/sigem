@@ -23,6 +23,10 @@ class Driver extends Model
         'status' => 'boolean',
         'cargo_id' => 'integer',
     ];
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->last_paternal_name} {$this->last_maternal_name}";
+    }
     public function cargo()
     {
         return $this->belongsTo(Cargo::class);

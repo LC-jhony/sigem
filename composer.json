@@ -20,7 +20,8 @@
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "postare/blade-mdi": "^1.1",
-        "pxlrbt/filament-excel": "^2.4"
+        "pxlrbt/filament-excel": "^2.4",
+        "troccoli/blade-health-icons": "^5.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
