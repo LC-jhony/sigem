@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CargoResource\Pages;
-use App\Filament\Resources\CargoResource\RelationManagers;
 use App\Models\Cargo;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -45,6 +44,7 @@ class CargoResource extends Resource
                     ]),
             ]);
     }
+
     public static function table(Table $table): Table
     {
         return $table

@@ -91,6 +91,20 @@
             margin: 1px 0;
         }
 
+        .expired {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .warning {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .valid {
+            color: #27ae60;
+        }
+
         main {
             margin-top: 30px;
             font-size: 10pt;

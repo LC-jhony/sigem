@@ -23,17 +23,19 @@ class VehicleFactory extends Factory
             'Fuera de Servicio',
             'En Reparación',
             'Disponible',
-            'En Uso'
+            'En Uso',
         ];
+
         return [
             'code' => strtoupper($this->faker->bothify('???##')), // Ej: ABC12
             'placa' => $this->generateUniquePlaca(),
             'marca' => $this->faker->randomElement(['Toyota', 'Nissan', 'Hyundai', 'Ford', 'Chevrolet', 'Kia']),
-            'unidad' => $this->faker->word . ' ' . $this->faker->randomElement(['Model X', '2023', 'Turbo', 'Premium']),
+            'unidad' => $this->faker->word.' '.$this->faker->randomElement(['Model X', '2023', 'Turbo', 'Premium']),
             'property_card' => $this->faker->unique()->numerify('PC-#####'),
             'status' => $this->faker->randomElement($statusOptions),
         ];
     }
+
     private function generateUniquePlaca()
     {
         do {

@@ -11,6 +11,7 @@ class DriverLicense extends Model
 {
     /** @use HasFactory<\Database\Factories\DriverLicenseFactory> */
     use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'driver_id',
         'license_number',
@@ -18,6 +19,7 @@ class DriverLicense extends Model
         'license_type',
         'file',
     ];
+
     public function driver(): BelongsTo
     {
         return $this->belongsTo(

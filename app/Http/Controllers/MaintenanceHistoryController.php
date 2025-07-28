@@ -22,6 +22,7 @@ class MaintenanceHistoryController extends Controller
         ))
             ->setPaper('A4', 'landscape')
             ->setOptions(['defaultFont' => 'sans-serif']);
+
         return $pdf->stream();
     }
 }

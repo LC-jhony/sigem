@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\DriverRotationService;
-use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class RotateDriversCommand extends Command
 {
@@ -32,12 +31,12 @@ class RotateDriversCommand extends Command
 
         $this->info("Iniciando rotación de conductores para {$month}/{$year}...");
 
-        $service = new DriverRotationService();
+        $service = new DriverRotationService;
         $result = $service->rotateDrivers($year, $month);
 
         if ($result['success']) {
-            $this->info('✅ ' . $result['message']);
-            
+            $this->info('✅ '.$result['message']);
+
             // Mostrar estadísticas
             $stats = $service->getRotationStats($year, $month);
             $this->table(
@@ -50,10 +49,11 @@ class RotateDriversCommand extends Command
                 ]
             );
         } else {
-            $this->error('❌ ' . $result['message']);
+            $this->error('❌ '.$result['message']);
+
             return 1;
         }
 
         return 0;
     }
-} 
+}

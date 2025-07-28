@@ -2,24 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Vehicle;
-use Filament\Forms\Form;
 use App\Enum\DocumentName;
 use App\Enum\VeicleStatus;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Filament\Forms\FormsComponent;
-use Illuminate\Support\Facades\Log;
-use Filament\Support\Enums\MaxWidth;
-use Filament\Tables\Actions\ActionGroup;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\VehicleResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\VehicleResource\RelationManagers;
+use App\Models\Vehicle;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
+use Carbon\Carbon;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
+use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Log;
 
 class VehicleResource extends Resource
 {
@@ -28,8 +26,8 @@ class VehicleResource extends Resource
     protected static ?string $navigationIcon = 'mdi-excavator';
 
     protected static ?string $navigationGroup = 'Gestión de Personal';
-    protected static ?string $modelLabel = 'Vehículos';
 
+    protected static ?string $modelLabel = 'Vehículos';
 
     public static function form(Form $form): Form
     {
@@ -71,8 +69,8 @@ class VehicleResource extends Resource
                                     ->label('Estado del Vehículo')
                                     ->options(VeicleStatus::class)
                                     ->required()
-                                    ->native(false)
-                            ])
+                                    ->native(false),
+                            ]),
                     ]),
                 Forms\Components\Section::make('Documentos del Vehículo')
                     ->description('Ingrese los documentos del vehículo')
@@ -106,8 +104,7 @@ class VehicleResource extends Resource
                                     ->acceptedFileTypes(['application/pdf']),
                             ]),
 
-
-                    ])
+                    ]),
             ]);
     }
 
@@ -139,26 +136,30 @@ class VehicleResource extends Resource
                     ->label('SOAT')
                     ->getStateUsing(function ($record) {
                         try {
-                            if (!$documentSoat = $record->documents->firstWhere('name', 'SOAT')) {
+                            if (! $documentSoat = $record->documents->firstWhere('name', 'SOAT')) {
                                 return 'no-document';
                             }
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en SOAT [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en SOAT [Vehículo {$record->id}]: ".$e->getMessage());
+
                             return 'invalid-date';
                         }
                     })
-                    ->formatStateUsing(fn($state) => match (true) {
+                    ->formatStateUsing(fn ($state) => match (true) {
                         $state === 'no-document' => 'Sin SOAT',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
                     ->badge()
                     ->color(function ($state) {
-                        if (!is_object($state)) return 'gray';
+                        if (! is_object($state)) {
+                            return 'gray';
+                        }
 
                         $dias = now()->diffInDays($state, false);
+
                         return match (true) {
                             $dias < 0 || $dias <= 7 => 'danger',
                             $dias <= 30 => 'warning',
@@ -169,26 +170,30 @@ class VehicleResource extends Resource
                     ->label('Tarjeta')
                     ->getStateUsing(function ($record) {
                         try {
-                            if (!$documentSoat = $record->documents->firstWhere('name', 'TARJETA DE CIRCULACION')) {
+                            if (! $documentSoat = $record->documents->firstWhere('name', 'TARJETA DE CIRCULACION')) {
                                 return 'no-document';
                             }
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en Tarjeta [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en Tarjeta [Vehículo {$record->id}]: ".$e->getMessage());
+
                             return 'invalid-date';
                         }
                     })
-                    ->formatStateUsing(fn($state) => match (true) {
+                    ->formatStateUsing(fn ($state) => match (true) {
                         $state === 'no-document' => 'Sin TARJETA',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
                     ->badge()
                     ->color(function ($state) {
-                        if (!is_object($state)) return 'gray';
+                        if (! is_object($state)) {
+                            return 'gray';
+                        }
 
                         $dias = now()->diffInDays($state, false);
+
                         return match (true) {
                             $dias < 0 || $dias <= 7 => 'danger',
                             $dias <= 30 => 'warning',
@@ -199,26 +204,30 @@ class VehicleResource extends Resource
                     ->label('Revision')
                     ->getStateUsing(function ($record) {
                         try {
-                            if (!$documentSoat = $record->documents->firstWhere('name', 'REVICION TECNICA')) {
+                            if (! $documentSoat = $record->documents->firstWhere('name', 'REVICION TECNICA')) {
                                 return 'no-document';
                             }
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en Revision [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en Revision [Vehículo {$record->id}]: ".$e->getMessage());
+
                             return 'invalid-date';
                         }
                     })
-                    ->formatStateUsing(fn($state) => match (true) {
+                    ->formatStateUsing(fn ($state) => match (true) {
                         $state === 'no-document' => 'Sin REVISIÓN',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
                     ->badge()
                     ->color(function ($state) {
-                        if (!is_object($state)) return 'gray';
+                        if (! is_object($state)) {
+                            return 'gray';
+                        }
 
                         $dias = now()->diffInDays($state, false);
+
                         return match (true) {
                             $dias < 0 || $dias <= 7 => 'danger',
                             $dias <= 30 => 'warning',
@@ -229,26 +238,30 @@ class VehicleResource extends Resource
                     ->label('Poliza')
                     ->getStateUsing(function ($record) {
                         try {
-                            if (!$documentSoat = $record->documents->firstWhere('name', 'POLIZA DE SEGURO VEHICULAR')) {
+                            if (! $documentSoat = $record->documents->firstWhere('name', 'POLIZA DE SEGURO VEHICULAR')) {
                                 return 'no-document';
                             }
 
                             return $documentSoat->date ? Carbon::parse($documentSoat->date) : null;
                         } catch (\Exception $e) {
-                            Log::error("Error en POLIZA [Vehículo {$record->id}]: " . $e->getMessage());
+                            Log::error("Error en POLIZA [Vehículo {$record->id}]: ".$e->getMessage());
+
                             return 'invalid-date';
                         }
                     })
-                    ->formatStateUsing(fn($state) => match (true) {
+                    ->formatStateUsing(fn ($state) => match (true) {
                         $state === 'no-document' => 'Sin POLIZA',
                         $state === 'invalid-date' => 'Fecha inválida',
                         default => $state?->format('d/m/Y') ?? 'Sin fecha'
                     })
                     ->badge()
                     ->color(function ($state) {
-                        if (!is_object($state)) return 'gray';
+                        if (! is_object($state)) {
+                            return 'gray';
+                        }
 
                         $dias = now()->diffInDays($state, false);
+
                         return match (true) {
                             $dias < 0 || $dias <= 7 => 'danger',
                             $dias <= 30 => 'warning',
@@ -259,7 +272,7 @@ class VehicleResource extends Resource
                     ->label('Estado')
                     ->searchable()
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'Operativo' => 'success',
                         'En Mantenimiento' => 'warning',
                         'Fuera de Servicio' => 'danger',
@@ -296,7 +309,7 @@ class VehicleResource extends Resource
                     ->modalContent(function ($record) {
                         return view('livewire.mantenance_modal', ['record' => $record]);
                     })
-                    ->modalHeading(fn($record) => 'Vehiculo:   ' . $record->placa)
+                    ->modalHeading(fn ($record) => 'Vehiculo:   '.$record->placa)
                     ->slideOver(true)
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false)
@@ -309,7 +322,7 @@ class VehicleResource extends Resource
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
-                ])
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

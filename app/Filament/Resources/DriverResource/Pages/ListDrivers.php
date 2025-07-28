@@ -2,19 +2,13 @@
 
 namespace App\Filament\Resources\DriverResource\Pages;
 
-use Filament\Actions;
-use App\Models\Driver;
-use App\Imports\DriverImport;
-use Maatwebsite\Excel\Facades\Excel;
-use Filament\Notifications\Notification;
-use pxlrbt\FilamentExcel\Columns\Column;
-use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\DriverResource;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use App\Imports\DriverImport;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
 use pxlrbt\FilamentExcel\Actions\Pages\ExportAction;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
-
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class ListDrivers extends ListRecords
 {
@@ -40,12 +34,12 @@ class ListDrivers extends ListRecords
                             Column::make('cargo.name')
                                 ->heading('CARGO'),
                         ])
-                        ->withFilename(date('Y-m-d') . ' - export')
+                        ->withFilename(date('Y-m-d').' - export'),
                 ]),
             \EightyNine\ExcelImport\ExcelImportAction::make()
                 ->label('Importar')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->color("info")
+                ->color('info')
                 ->outlined()
                 ->use(DriverImport::class)
                 ->slideOver(),

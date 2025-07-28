@@ -2,24 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\DriverMineAssigmentMineResource\Pages;
+use App\Models\DriverMineAssigment;
+use App\Models\Mine;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use App\Models\DriverMineAssigment;
-use App\Models\DriverMineAssigmentMine;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\DriverMineAssigmentMineResource\Pages;
 
 class DriverMineAssigmentMineResource extends Resource
 {
     protected static ?string $model = DriverMineAssigment::class;
-
 
     protected static ?string $navigationIcon = 'healthicons-o-miner-worker';
 
@@ -42,7 +41,7 @@ class DriverMineAssigmentMineResource extends Resource
                                 Forms\Components\Select::make('driver_id')
                                     ->label('Conductor')
                                     ->relationship('driver')
-                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->full_name . ' - ' . $record->dni)
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name.' - '.$record->dni)
                                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name', 'dni'])
                                     ->required()
                                     ->preload()
@@ -73,7 +72,7 @@ class DriverMineAssigmentMineResource extends Resource
                                         9 => 'Septiembre',
                                         10 => 'Octubre',
                                         11 => 'Noviembre',
-                                        12 => 'Diciembre'
+                                        12 => 'Diciembre',
                                     ])
                                     ->default(date('n'))
                                     ->required()
@@ -89,6 +88,7 @@ class DriverMineAssigmentMineResource extends Resource
                                         for ($i = $currentYear - 1; $i <= $currentYear + 2; $i++) {
                                             $years[$i] = $i;
                                         }
+
                                         return $years;
                                     })
                                     ->default(date('Y'))
@@ -137,6 +137,7 @@ class DriverMineAssigmentMineResource extends Resource
 
             ]);
     }
+
     protected static function updateDates(Set $set, Get $get): void
     {
         $year = $get('year');
@@ -150,6 +151,7 @@ class DriverMineAssigmentMineResource extends Resource
             $set('end_date', $endDate->format('Y-m-d'));
         }
     }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -189,7 +191,7 @@ class DriverMineAssigmentMineResource extends Resource
                         'cancelado' => 'danger',
                         default => 'secondary',
                     })
-                    ->formatStateUsing(fn(string $state): string => match (strtolower($state)) {
+                    ->formatStateUsing(fn (string $state): string => match (strtolower($state)) {
                         'activo' => 'Activo',
                         'completado', 'completedo' => 'Completado',
                         'cancelado' => 'Cancelado',
@@ -209,18 +211,35 @@ class DriverMineAssigmentMineResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-        
+
             ->filters([
+                Tables\Filters\SelectFilter::make('mine_id')
+                    ->label('Mina')
+                    ->options(Mine::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->native(false),
                 Tables\Filters\SelectFilter::make('month')
                     ->label('Mes')
                     ->options([
-                        1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio',
-                        7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre',
+                        1 => 'Enero',
+                        2 => 'Febrero',
+                        3 => 'Marzo',
+                        4 => 'Abril',
+                        5 => 'Mayo',
+                        6 => 'Junio',
+                        7 => 'Julio',
+                        8 => 'Agosto',
+                        9 => 'Septiembre',
+                        10 => 'Octubre',
+                        11 => 'Noviembre',
+                        12 => 'Diciembre',
                     ]),
                 Tables\Filters\SelectFilter::make('year')
                     ->label('Año')
                     ->options(function () {
                         $years = range(date('Y') - 1, date('Y') + 2);
+
                         return array_combine($years, $years);
                     }),
                 Tables\Filters\TrashedFilter::make(),

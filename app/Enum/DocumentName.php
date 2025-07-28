@@ -10,6 +10,7 @@ enum DocumentName: string implements HasLabel
     case TARJETA_DE_CIRCULACION = 'TARJETA DE CIRCULACION';
     case REVICION_TECNICA = 'REVICION TECNICA';
     case POLIZA_DE_SEGURO_VEHICULAR = 'POLIZA DE SEGURO VEHICULAR';
+
     public function getLabel(): ?string
     {
         return match ($this) {

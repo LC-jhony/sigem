@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MaintenanceItemResource\Pages;
-use App\Filament\Resources\MaintenanceItemResource\RelationManagers;
 use App\Models\MaintenanceItem;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MaintenanceItemResource extends Resource
 {
@@ -20,6 +17,7 @@ class MaintenanceItemResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
     protected static ?string $navigationGroup = 'Mantenimiento';
+
     protected static ?string $modelLabel = 'Lista';
 
     public static function form(Form $form): Form
@@ -32,7 +30,7 @@ class MaintenanceItemResource extends Resource
                             ->label('Nombre')
                             ->required()
                             ->maxLength(255),
-                    ])
+                    ]),
             ]);
     }
 

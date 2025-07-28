@@ -2,25 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
+use App\Filament\Resources\DriverLicenseResource\Pages;
 use App\Models\Driver;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
 use App\Models\DriverLicense;
+use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Table;
+use Hugomyb\FilamentMediaAction\Tables\Actions\MediaAction;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\DriverLicenseResource\Pages;
-use Hugomyb\FilamentMediaAction\Tables\Actions\MediaAction;
-use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 
 class DriverLicenseResource extends Resource
 {
     protected static ?string $model = DriverLicense::class;
-
 
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
@@ -46,10 +45,10 @@ class DriverLicenseResource extends Resource
                                             ->label('Chofer')
                                             ->searchable()
                                             ->options(Driver::all()->pluck('name', 'id'))
-                                            ->getSearchResultsUsing(fn(string $search): array => Driver::where('dni', 'like', "%{$search}%")->limit(50)->get()->mapWithKeys(function ($driver) {
+                                            ->getSearchResultsUsing(fn (string $search): array => Driver::where('dni', 'like', "%{$search}%")->limit(50)->get()->mapWithKeys(function ($driver) {
                                                 return [$driver->id => "{$driver->name} {$driver->last_paternal_name} {$driver->last_maternal_name}"];
                                             })->toArray())
-                                            ->getOptionLabelsUsing(fn(array $values): array => Driver::whereIn('id', $values)->get()->mapWithKeys(function ($driver) {
+                                            ->getOptionLabelsUsing(fn (array $values): array => Driver::whereIn('id', $values)->get()->mapWithKeys(function ($driver) {
                                                 return [$driver->id => "{$driver->name} {$driver->last_paternal_name} {$driver->last_maternal_name}"];
                                             })->toArray())
                                             ->required(),
@@ -94,7 +93,7 @@ class DriverLicenseResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('driver.full_name')
                     ->label('Chofer')
-                    ->getStateUsing(fn($record) => $record->driver->name . ' ' . $record->driver->last_paternal_name . ' ' . $record->driver->last_maternal_name)
+                    ->getStateUsing(fn ($record) => $record->driver->name.' '.$record->driver->last_paternal_name.' '.$record->driver->last_maternal_name)
                     ->searchable(['drivers.name', 'drivers.last_paternal_name', 'drivers.last_maternal_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('license_number')
@@ -170,7 +169,7 @@ class DriverLicenseResource extends Resource
                     ->native(false),
                 /**
                  * Filtro para el estado de las licencias de conducir
-                 * 
+                 *
                  * Este filtro permite filtrar las licencias por su estado de vencimiento:
                  * - Vigente: Licencias con más de 30 días para vencer
                  * - Por vencer: Licencias que vencen entre 4 y 30 días
@@ -193,18 +192,19 @@ class DriverLicenseResource extends Resource
 
                     /**
                      * Query personalizada que se ejecuta cuando se selecciona una opción
-                     * 
-                     * @param Builder $query - Constructor de consulta Eloquent
-                     * @param array $data - Datos del filtro ['value' => 'opcion_seleccionada']
+                     *
+                     * @param  Builder  $query  - Constructor de consulta Eloquent
+                     * @param  array  $data  - Datos del filtro ['value' => 'opcion_seleccionada']
                      * @return Builder - Query modificada según el filtro seleccionado
                      */
                     ->query(function (Builder $query, array $data): Builder {
                         // Si no hay valor seleccionado, retorna la query sin modificar
-                        if (!$data['value']) {
+                        if (! $data['value']) {
                             return $query;
                         }
                         // Obtiene la fecha actual para comparaciones
                         $today = now();
+
                         // Aplica el filtro según la opción seleccionada
                         return match ($data['value']) {
                             // VIGENTE: Fecha de vencimiento > hoy + 30 días
@@ -234,15 +234,15 @@ class DriverLicenseResource extends Resource
                     ->multiple()
                     ->label('Conductor')
                     ->searchable()
-                    ->preload()
+                    ->preload(),
             ])
             ->actions([
                 MediaAction::make('pdf')
                     ->label('')
-                    ->media(fn($record) => $record->file ? asset('storage/' . $record->file) : null)
+                    ->media(fn ($record) => $record->file ? asset('storage/'.$record->file) : null)
                     // ->iconButton()
                     ->icon('bi-file-pdf-fill')
-                    ->visible(fn($record) => !empty($record->file)),
+                    ->visible(fn ($record) => ! empty($record->file)),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),

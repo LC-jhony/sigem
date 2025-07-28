@@ -24,7 +24,7 @@ return new class extends Migration
                 'Fuera de Servicio',
                 'En Reparación',
                 'Disponible',
-                'En Uso'
+                'En Uso',
             ]);
             $table->timestamps();
             $table->softDeletes();

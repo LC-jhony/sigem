@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MineResource\Pages;
-use App\Filament\Resources\MineResource\RelationManagers;
 use App\Models\Mine;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,6 +17,7 @@ class MineResource extends Resource
     protected static ?string $model = Mine::class;
 
     protected static ?string $navigationIcon = 'bi-minecart-loaded';
+
     protected static ?string $navigationLabel = 'Minas';
 
     protected static ?string $modelLabel = 'Mina';
@@ -50,7 +50,7 @@ class MineResource extends Resource
                             ->inline()
                             ->inlineLabel(false)
                             ->default(true),
-                    ])
+                    ]),
             ]);
     }
 

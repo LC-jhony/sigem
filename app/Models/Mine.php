@@ -3,26 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mine extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'location',
-        'status'
+        'status',
     ];
+
     protected $casts = [
         'status' => 'boolean',
     ];
+
     public function assignments(): HasMany
     {
         return $this->hasMany(
             DriverMineAssigment::class,
         );
     }
+
     public function activeAssignments(): HasMany
     {
         return $this->hasMany(
@@ -36,6 +40,7 @@ class Mine extends Model
             DriverMineAssigment::class,
         )->where('status', 'Activo');
     }
+
     public function users(): HasMany
     {
         return $this->hasMany(

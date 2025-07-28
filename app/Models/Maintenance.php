@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Vehicle;
-use App\Models\MaintenanceItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,8 +16,9 @@ class Maintenance extends Model
         'workforce',
         'maintenance_cost',
         'photo',
-        'file'
+        'file',
     ];
+
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(

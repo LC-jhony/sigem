@@ -17,6 +17,7 @@ class ValueMaintenanceVehicleController extends Controller
         $pdf = Pdf::loadView('pdf.value-mantenace-vehicle', [
             'record' => $record,
         ]);
+
         return $pdf->stream();
     }
 }

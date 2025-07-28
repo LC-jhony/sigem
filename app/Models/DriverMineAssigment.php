@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Models\Mine;
-use App\Models\Driver;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DriverMineAssigment extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'driver_id',
         'mine_id',
@@ -23,12 +22,14 @@ class DriverMineAssigment extends Model
         'status',
         'notes',
     ];
+
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'month' => 'integer',
         'year' => 'integer',
     ];
+
     // Relaciones
     public function driver(): BelongsTo
     {
@@ -39,6 +40,7 @@ class DriverMineAssigment extends Model
     {
         return $this->belongsTo(Mine::class);
     }
+
     // Scopes
     public function scopeActive(Builder $query): Builder
     {
@@ -48,6 +50,7 @@ class DriverMineAssigment extends Model
     public function scopeCurrentMonth(Builder $query): Builder
     {
         $now = Carbon::now();
+
         return $query->where('year', $now->year)
             ->where('month', $now->month);
     }
@@ -72,7 +75,7 @@ class DriverMineAssigment extends Model
             9 => 'Septiembre',
             10 => 'Octubre',
             11 => 'Noviembre',
-            12 => 'Diciembre'
+            12 => 'Diciembre',
         ];
 
         return $months[$this->month] ?? '';
@@ -80,7 +83,7 @@ class DriverMineAssigment extends Model
 
     public function getPeriodAttribute(): string
     {
-        return $this->month_name . ' ' . $this->year;
+        return $this->month_name.' '.$this->year;
     }
 
     public function getIsActiveAttribute(): bool

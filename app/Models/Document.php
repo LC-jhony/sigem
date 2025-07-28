@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Vehicle;
 use App\Enum\DocumentName;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,8 +12,9 @@ class Document extends Model
         'vehicle_id',
         'date',
         'name',
-        'file'
+        'file',
     ];
+
     // protected $casts = [
     //     'name' => DocumentName::class,
     // ];

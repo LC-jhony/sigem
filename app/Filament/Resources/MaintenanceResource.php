@@ -2,31 +2,29 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Vehicle;
-use Filament\Forms\Form;
 use App\Enum\MillageItems;
-use Filament\Tables\Table;
+use App\Filament\Resources\MaintenanceResource\Pages;
 use App\Models\Maintenance;
-use Filament\Support\RawJs;
 use App\Models\MaintenanceItem;
+use App\Models\Vehicle;
+use Filament\Forms;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconSize;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Support\RawJs;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
-use App\Filament\Resources\MaintenanceResource\Pages;
-use App\Filament\Resources\MaintenanceResource\RelationManagers;
 
 class MaintenanceResource extends Resource
 {
     protected static ?string $model = Maintenance::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-wrench-screwdriver';
-    protected static ?string $navigationGroup = 'Mantenimiento';
-    protected static ?string $modelLabel = 'Mantenimiento';
 
+    protected static ?string $navigationGroup = 'Mantenimiento';
+
+    protected static ?string $modelLabel = 'Mantenimiento';
 
     public static function form(Form $form): Form
     {
@@ -45,7 +43,7 @@ class MaintenanceResource extends Resource
                             ->disk('public')
                             ->directory('maintenance/files')
                             ->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(2048)
+                            ->maxSize(2048),
                     ]),
                 Forms\Components\Grid::make()
                     ->columns(2)
@@ -117,9 +115,9 @@ class MaintenanceResource extends Resource
                                     ->inputMode('decimal')
                                     ->mask(RawJs::make('$money($input, ",")'))
                                     ->numeric(),
-                            ])
+                            ]),
 
-                    ])
+                    ]),
             ]);
     }
 

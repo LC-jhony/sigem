@@ -15,7 +15,10 @@ class ListVehicles extends ListRecords
         return [
             Actions\Action::make('pdf')
                 ->label('Exportar PDF')
-                ->color('primary'),
+                ->color('primary')
+                ->icon('heroicon-o-document-arrow-down')
+                ->url(route('vehicledocument.pdf'))
+                ->openUrlInNewTab(),
             Actions\Action::make('Excel')
                 ->label('Exportar Excel')
                 ->color('primary'),

@@ -30,7 +30,7 @@ class DriverLicenseFactory extends Factory
      */
     public function expiringSoon(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'expiration_date' => $this->faker->dateTimeBetween('now', '+3 months'),
         ]);
     }
@@ -40,7 +40,7 @@ class DriverLicenseFactory extends Factory
      */
     public function expired(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'expiration_date' => $this->faker->dateTimeBetween('-2 years', '-1 day'),
         ]);
     }
@@ -50,7 +50,7 @@ class DriverLicenseFactory extends Factory
      */
     public function commercial(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'license_type' => 'CDL',
         ]);
     }

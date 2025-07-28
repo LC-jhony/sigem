@@ -4,21 +4,23 @@ namespace App\Imports;
 
 use App\Models\Cargo;
 use App\Models\Driver;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Facades\Log;
-use Filament\Notifications\Notification;
 
 class DriverImport implements ToCollection, WithHeadingRow
 {
     protected $additionalData = [];
+
     protected $customImportData = [];
+
     protected $importStats = [
         'total' => 0,
         'imported' => 0,
         'skipped' => 0,
-        'errors' => 0
+        'errors' => 0,
     ];
 
     public function collection(Collection $rows)
@@ -49,11 +51,12 @@ class DriverImport implements ToCollection, WithHeadingRow
                     Log::warning('Duplicate DNI found in Excel', [
                         'dni' => $dni,
                         'row' => $rowIndex + 2, // +2 because of 0-index and header row
-                        'data' => $row
+                        'data' => $row,
                     ]);
 
                     // Skip processing this duplicate row
                     $duplicatesNotImported++;
+
                     continue;
                 }
 
@@ -62,7 +65,7 @@ class DriverImport implements ToCollection, WithHeadingRow
 
                 // Find or create cargo if provided
                 $cargo = null;
-                if (!empty($row['cargo'])) {
+                if (! empty($row['cargo'])) {
                     $cargo = Cargo::firstOrCreate(
                         ['name' => trim($row['cargo'])]
                     );
@@ -73,8 +76,8 @@ class DriverImport implements ToCollection, WithHeadingRow
                     ['dni' => $dni], // Find by DNI
                     [
                         'name' => trim($row['nombres']),
-                        'last_paternal_name' => !empty($row['apellido_paterno']) ? trim($row['apellido_paterno']) : null,
-                        'last_maternal_name' => !empty($row['apellido_materno']) ? trim($row['apellido_materno']) : null,
+                        'last_paternal_name' => ! empty($row['apellido_paterno']) ? trim($row['apellido_paterno']) : null,
+                        'last_maternal_name' => ! empty($row['apellido_materno']) ? trim($row['apellido_materno']) : null,
                         'cargo_id' => $cargo?->id,
                     ]
                 );
@@ -82,11 +85,11 @@ class DriverImport implements ToCollection, WithHeadingRow
                 $successCount++;
             } catch (\Exception $e) {
                 $errorCount++;
-                $errors[] = "Fila " . ($rowIndex + 2) . " con DNI {$row['dni']}: " . $e->getMessage();
+                $errors[] = 'Fila '.($rowIndex + 2)." con DNI {$row['dni']}: ".$e->getMessage();
                 Log::error('Error importing driver', [
                     'row' => $rowIndex + 2,
                     'data' => $row,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -113,9 +116,9 @@ class DriverImport implements ToCollection, WithHeadingRow
             // Show some example DNIs if there are duplicates
             if (count($duplicateDnis) > 0) {
                 $exampleDnis = array_slice(array_unique($duplicateDnis), 0, 3);
-                $bodyParts[] = "📋 Ejemplos de DNIs duplicados: " . implode(', ', $exampleDnis);
+                $bodyParts[] = '📋 Ejemplos de DNIs duplicados: '.implode(', ', $exampleDnis);
                 if (count($duplicateDnis) > 3) {
-                    $bodyParts[] = "... y " . (count(array_unique($duplicateDnis)) - 3) . " más";
+                    $bodyParts[] = '... y '.(count(array_unique($duplicateDnis)) - 3).' más';
                 }
             }
         }
@@ -158,9 +161,9 @@ class DriverImport implements ToCollection, WithHeadingRow
         if ($duplicatesInExcel > 5) {
             Notification::make()
                 ->title('📊 Reporte detallado de duplicados')
-                ->body("Se encontraron {$duplicatesInExcel} registros duplicados en el archivo Excel. " .
-                    "Estos duplicados fueron omitidos para evitar inconsistencias en la base de datos. " .
-                    "Revisa tu archivo Excel para eliminar las filas duplicadas antes de importar.")
+                ->body("Se encontraron {$duplicatesInExcel} registros duplicados en el archivo Excel. ".
+                    'Estos duplicados fueron omitidos para evitar inconsistencias en la base de datos. '.
+                    'Revisa tu archivo Excel para eliminar las filas duplicadas antes de importar.')
                 ->info()
                 ->duration(12000)
                 ->send();
@@ -180,7 +183,7 @@ class DriverImport implements ToCollection, WithHeadingRow
         $dniFields = ['dni', 'documento', 'cedula', 'ci', 'numero_documento'];
 
         foreach ($dniFields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return trim((string) $row[$field]);
             }
         }
@@ -198,11 +201,11 @@ class DriverImport implements ToCollection, WithHeadingRow
             'apellido paterno',
             'last_paternal_name',
             'primer_apellido',
-            'primer apellido'
+            'primer apellido',
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return trim((string) $row[$field]);
             }
         }
@@ -220,11 +223,11 @@ class DriverImport implements ToCollection, WithHeadingRow
             'apellido materno',
             'last_maternal_name',
             'segundo_apellido',
-            'segundo apellido'
+            'segundo apellido',
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return trim((string) $row[$field]);
             }
         }
@@ -242,11 +245,11 @@ class DriverImport implements ToCollection, WithHeadingRow
             'nombres',
             'nombre',
             'first_name',
-            'nombre_completo'
+            'nombre_completo',
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return trim((string) $row[$field]);
             }
         }
@@ -263,7 +266,7 @@ class DriverImport implements ToCollection, WithHeadingRow
         $cargoName = 'Default Cargo';
 
         foreach ($cargoFields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 $cargoName = trim((string) $row[$field]);
                 break;
             }

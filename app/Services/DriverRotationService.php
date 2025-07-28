@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Driver;
-use App\Models\Mine;
 use App\Models\DriverMineAssigment;
+use App\Models\Mine;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -12,10 +12,6 @@ class DriverRotationService
 {
     /**
      * Rota automáticamente los conductores entre minas para el mes especificado
-     *
-     * @param int $year
-     * @param int $month
-     * @return array
      */
     public function rotateDrivers(int $year, int $month): array
     {
@@ -25,7 +21,7 @@ class DriverRotationService
         if ($drivers->isEmpty() || $mines->isEmpty()) {
             return [
                 'success' => false,
-                'message' => 'No hay conductores o minas disponibles para la rotación.'
+                'message' => 'No hay conductores o minas disponibles para la rotación.',
             ];
         }
 
@@ -48,7 +44,7 @@ class DriverRotationService
                 // Evitar que repita la misma mina del mes anterior
                 $prevMineId = $prevAssignments->get($driver->id)?->mine_id;
                 $availableMines = $prevMineId ? array_diff($mineIds, [$prevMineId]) : $mineIds;
-                
+
                 // Si no hay minas disponibles, usar todas
                 if (empty($availableMines)) {
                     $availableMines = $mineIds;
@@ -70,7 +66,7 @@ class DriverRotationService
                         'start_date' => $startDate,
                         'end_date' => $endDate,
                         'status' => 'Activo',
-                        'notes' => 'Asignación automática por rotación mensual'
+                        'notes' => 'Asignación automática por rotación mensual',
                     ]
                 );
 
@@ -82,27 +78,21 @@ class DriverRotationService
             return [
                 'success' => true,
                 'message' => "Rotación completada exitosamente. {$drivers->count()} conductores reasignados.",
-                'assignments' => $assignments
+                'assignments' => $assignments,
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             return [
                 'success' => false,
-                'message' => 'Error durante la rotación: ' . $e->getMessage()
+                'message' => 'Error durante la rotación: '.$e->getMessage(),
             ];
         }
     }
 
     /**
      * Verifica si un conductor puede ser asignado a una mina específica
-     *
-     * @param int $driverId
-     * @param int $mineId
-     * @param string $startDate
-     * @param string $endDate
-     * @return bool
      */
     public function canAssignDriver(int $driverId, int $mineId, string $startDate, string $endDate): bool
     {
@@ -111,23 +101,19 @@ class DriverRotationService
             ->where('status', 'Activo')
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('start_date', [$startDate, $endDate])
-                      ->orWhereBetween('end_date', [$startDate, $endDate])
-                      ->orWhere(function ($q) use ($startDate, $endDate) {
-                          $q->where('start_date', '<=', $startDate)
+                    ->orWhereBetween('end_date', [$startDate, $endDate])
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        $q->where('start_date', '<=', $startDate)
                             ->where('end_date', '>=', $endDate);
-                      });
+                    });
             })
             ->exists();
 
-        return !$conflicts;
+        return ! $conflicts;
     }
 
     /**
      * Obtiene estadísticas de rotación
-     *
-     * @param int $year
-     * @param int $month
-     * @return array
      */
     public function getRotationStats(int $year, int $month): array
     {
@@ -145,7 +131,7 @@ class DriverRotationService
             'assigned_drivers' => $assignedDrivers,
             'active_assignments' => $activeAssignments,
             'unassigned_drivers' => $totalDrivers - $assignedDrivers,
-            'assignments' => $assignments
+            'assignments' => $assignments,
         ];
     }
-} 
+}

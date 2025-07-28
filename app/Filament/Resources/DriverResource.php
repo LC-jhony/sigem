@@ -2,27 +2,22 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use Filament\Tables;
+use App\Filament\Resources\DriverResource\Pages;
 use App\Models\Cargo;
 use App\Models\Driver;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use App\Imports\DriverImport;
-use Filament\Resources\Resource;
-use Filament\Tables\Actions\ActionGroup;
-use pxlrbt\FilamentExcel\Columns\Column;
-use Illuminate\Database\Eloquent\Builder;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
-use App\Filament\Resources\DriverResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use App\Filament\Resources\DriverResource\RelationManagers;
 use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Table;
 use Hugomyb\FilamentMediaAction\Tables\Actions\MediaAction;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
-use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class DriverResource extends Resource
 {
@@ -35,6 +30,7 @@ class DriverResource extends Resource
     protected static ?string $navigationGroup = 'Gestión de Personal';
 
     protected static ?int $navigationSort = 1; // To control the order within the group
+
     protected static ?string $navigationLabel = 'Conductores'; // Custom label for navigation
 
     public static function form(Form $form): Form
@@ -118,7 +114,7 @@ class DriverResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('full_name')
                     ->label('Nombre')
-                    ->getStateUsing(fn($record) => $record->name . ' ' . $record->last_paternal_name . ' ' . $record->last_maternal_name)
+                    ->getStateUsing(fn ($record) => $record->name.' '.$record->last_paternal_name.' '.$record->last_maternal_name)
                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('dni')
@@ -168,9 +164,9 @@ class DriverResource extends Resource
             ->actions([
                 MediaAction::make('pdf')
                     ->label('')
-                    ->media(fn($record) => $record->file ? asset('storage/' . $record->file) : null)
+                    ->media(fn ($record) => $record->file ? asset('storage/'.$record->file) : null)
                     ->icon('bi-file-pdf-fill')
-                    ->visible(fn($record) => !empty($record->file)),
+                    ->visible(fn ($record) => ! empty($record->file)),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
@@ -200,8 +196,8 @@ class DriverResource extends Resource
                                         ->heading('CARGO'),
 
                                 ])
-                                ->withFilename(date('Y-m-d') . ' - export')
-                        ])
+                                ->withFilename(date('Y-m-d').' - export'),
+                        ]),
                 ]),
             ]);
     }

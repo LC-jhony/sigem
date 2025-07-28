@@ -2,35 +2,38 @@
 
 namespace App\Livewire\Mantenance;
 
-use Filament\Forms;
-use Filament\Tables;
-use App\Models\Vehicle;
-use Livewire\Component;
 use App\Enum\MillageItems;
-use Filament\Tables\Table;
 use App\Models\MaintenanceItem;
+use App\Models\Vehicle;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Forms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\MaxWidth;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Actions\CreateAction;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Support\RawJs;
-use Illuminate\Support\Collection;
+use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
+use Livewire\Component;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
 
 class MantenaceTable extends Component implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;
+
     /**
      * The record to display in the maintenance table.
-     * @var mixed 
+     *
+     * @var mixed
      **/
     public $record;
+
     public function table(Table $table): Table
     {
         return $table
@@ -72,7 +75,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Fecha')
                     ->dateTime()
-                    ->sortable()
+                    ->sortable(),
             ])
             ->headerActions([
                 Tables\Actions\Action::make('valued_pdf')
@@ -91,7 +94,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->color('warning')
                     ->icon('heroicon-o-plus-circle')
                     ->modalWidth(MaxWidth::SevenExtraLarge)
-                    //->slideOver(true)
+                    // ->slideOver(true)
                     ->form([
                         Forms\Components\Section::make('Archivos')
                             ->columns(2)
@@ -109,7 +112,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->disk('public')
                                     ->directory('maintenance/files')
                                     ->acceptedFileTypes(['application/pdf'])
-                                    ->maxSize(2048)
+                                    ->maxSize(2048),
                             ]),
                         Forms\Components\Grid::make()
                             ->columns(2)
@@ -117,7 +120,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                 Forms\Components\Select::make('vehicle_id')
                                     ->label('Vehicle')
                                     ->options(Vehicle::all()->pluck('placa', 'id'))
-                                    ->default(fn() => $this->record->id)
+                                    ->default(fn () => $this->record->id)
                                     ->disabled()
                                     ->dehydrated()
                                     ->required(),
@@ -180,11 +183,11 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                             ->inputMode('decimal')
                                             ->mask(RawJs::make('$money($input, ",")'))
                                             ->numeric(),
-                                    ])
+                                    ]),
 
-                            ])
+                            ]),
 
-                    ])
+                    ]),
 
             ])
             ->filters([
@@ -217,18 +220,20 @@ class MantenaceTable extends Component implements HasForms, HasTable
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
                             $vehicle = $this->record; // Asegúrate de tener el vehículo actual
-                            return response()->streamDownload(function () use ($records, $vehicle) {
+
+                            return response()->streamDownload(function () use ($records) {
                                 echo Pdf::loadHtml(
                                     Blade::render('pdf.value-maintenance', [
                                         'records' => $records,
                                         'vehicle' => $this->record,
                                     ])
                                 )->stream();
-                            }, $vehicle->placa . '.pdf');
-                        })
+                            }, $vehicle->placa.'.pdf');
+                        }),
                 ]),
             ]);
     }
+
     public function render()
     {
         return view('livewire.mantenance.mantenace-table');

@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources\DriverMineAssigmentMineResource\Pages;
 
-use Filament\Actions;
-use Filament\Notifications\Notification;
-use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\DriverMineAssigmentMineResource;
 use App\Models\DriverMineAssigment;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
 
 class CreateDriverMineAssigmentMine extends CreateRecord
 {
@@ -14,10 +13,10 @@ class CreateDriverMineAssigmentMine extends CreateRecord
 
     /**
      * Define la URL de redirección después de crear un registro
-     * 
+     *
      * Redirige al usuario a la página de índice del recurso después
      * de crear exitosamente una asignación.
-     * 
+     *
      * @return string URL de redirección
      */
     protected function getRedirectUrl(): string
@@ -27,12 +26,11 @@ class CreateDriverMineAssigmentMine extends CreateRecord
 
     /**
      * Hook que se ejecuta antes de crear el registro
-     * 
+     *
      * Valida que no exista una asignación duplicada para el mismo conductor
      * en el mismo período (año y mes). Si encuentra una asignación existente,
      * muestra una notificación de error y detiene el proceso de creación.
-     * 
-     * @return void
+     *
      * @throws \Exception Si existe una asignación duplicada
      */
     protected function beforeCreate(): void
@@ -48,11 +46,12 @@ class CreateDriverMineAssigmentMine extends CreateRecord
         // Validar licencias del conductor
         $this->validateDriverLicenses($data);
     }
+
     private function validateDriverLicenses(array $data): void
     {
         $driver = \App\Models\Driver::find($data['driver_id']);
 
-        if (!$driver) {
+        if (! $driver) {
             Notification::make()
                 ->title('Conductor no encontrado')
                 ->body('No se encontró el conductor seleccionado.')
@@ -67,7 +66,7 @@ class CreateDriverMineAssigmentMine extends CreateRecord
             ->whereNull('deleted_at') // Por si usas SoftDeletes
             ->exists();
 
-        if (!$hasValidLicense) {
+        if (! $hasValidLicense) {
             Notification::make()
                 ->title('Licencia no válida')
                 ->body('El conductor no tiene una licencia activa o la licencia está vencida para la fecha de inicio de la asignación.')
@@ -103,11 +102,9 @@ class CreateDriverMineAssigmentMine extends CreateRecord
 
     /**
      * Hook que se ejecuta después de crear el registro exitosamente
-     * 
+     *
      * Muestra una notificación de éxito confirmando que la asignación
      * ha sido creada correctamente.
-     * 
-     * @return void
      */
     protected function afterCreate(): void
     {

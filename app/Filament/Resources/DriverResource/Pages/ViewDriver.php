@@ -2,18 +2,16 @@
 
 namespace App\Filament\Resources\DriverResource\Pages;
 
+use App\Filament\Resources\DriverResource;
 use Filament\Actions;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
-use App\Filament\Resources\DriverResource;
 use Joaopaulolndev\FilamentPdfViewer\Infolists\Components\PdfViewerEntry;
-
 
 class ViewDriver extends ViewRecord
 {
     protected static string $resource = DriverResource::class;
-
 
     protected function getHeaderActions(): array
     {
@@ -48,7 +46,7 @@ class ViewDriver extends ViewRecord
                                         Infolists\Components\TextEntry::make('cargo.name')
                                             ->label('Cargo')
                                             ->badge(),
-                                        Infolists\Components\IconEntry::make('status')
+                                        Infolists\Components\IconEntry::make('status'),
                                     ]),
                                 Infolists\Components\Grid::make()
                                     ->columnSpan(3)
