@@ -18,12 +18,13 @@ class ListVehicles extends ListRecords
             Actions\Action::make('pdf')
                 ->label('Exportar PDF')
                 ->color('primary')
-                ->icon('heroicon-o-document-arrow-down')
+                ->icon('bi-file-pdf-fill')
                 ->url(route('vehicledocument.pdf'))
                 ->openUrlInNewTab(),
             Actions\Action::make('Excel')
                 ->label('Exportar Excel')
                 ->color('success')
+                ->icon('uiw-file-excel')
                 ->action(function () {
                     return Excel::download(new VehicleDocumentExport, 'vehicle_documents-' . now()->format('Y-m-d') . '.xlsx');
                 }),
