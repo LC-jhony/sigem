@@ -42,4 +42,12 @@ class Driver extends Model
             foreignKey: 'driver_id',
         );
     }
+
+    public function driverMineAssigments(): HasMany
+    {
+        return $this->hasMany(
+            related: DriverMineAssigment::class,
+            foreignKey: 'driver_id',
+        );
+    }
 }
