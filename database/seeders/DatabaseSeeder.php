@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\MaintenanceItem;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\MaintenanceItem;
 use Illuminate\Database\Seeder;
+use Database\Seeders\VehicleSeeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -15,17 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(2)->create();
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => Hash::make('password'),
         ]);
-        $this->call([
-            VehicleSeeder::class,
-            // Add other seeders here as needed
-        ]);
+        // $this->call([
+        //     VehicleSeeder::class,
+        //     // Add other seeders here as needed
+        // ]);
         $items = [
             ['name' => 'FILTRO DE ACEITE DE MOTOR'],
             ['name' => 'FILTRO DE COMBUSTIBLE'],

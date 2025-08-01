@@ -45,6 +45,7 @@ class Mine extends Model
     {
         return $this->hasMany(
             User::class,
+            'mine_id'
         );
     }
 }

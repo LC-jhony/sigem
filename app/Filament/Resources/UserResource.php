@@ -20,7 +20,10 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'fas-user-shield';
+
+    protected static ?string $navigationGroup = 'Filament Shield';
+
 
     public static function form(Form $form): Form
     {
@@ -53,10 +56,10 @@ class UserResource extends Resource
                             ->visible(fn($livewire) => $livewire instanceof CreateUser)
                             ->rule(Password::default()),
 
-                        // Forms\Components\CheckboxList::make('roles')
-                        //     ->relationship('roles', 'name')
-                        //     ->searchable()
-                        //     ->columns(6),
+                        Forms\Components\CheckboxList::make('roles')
+                            ->relationship('roles', 'name')
+                            ->searchable()
+                            ->columns(6),
 
                     ]),
                 Forms\Components\Section::make('User New Password')
@@ -68,7 +71,7 @@ class UserResource extends Resource
                             ->visible(fn($livewire) => $livewire instanceof EditUser)
                             ->rule(Password::default()),
                         Forms\Components\TextInput::make('new_password_confirmation')
-                            ->label('Confirmar Nueva Contraseña')
+                            ->label('Confirmar Contraseña')
                             ->password()
                             ->same('new_password')
                             ->requiredWith('new_password'),
@@ -89,9 +92,9 @@ class UserResource extends Resource
                 // Tables\Columns\TextColumn::make('email_verified_at')
                 //     ->dateTime()
                 //     ->sortable(),
-                // Tables\Columns\TextColumn::make('roles.name')
-                //     ->label('Roles')
-                //     ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
@@ -102,7 +105,7 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('mine_id')
+                Tables\Columns\TextColumn::make('mina.name')
                     ->label('Mina')
                     ->numeric()
                     ->sortable(),
