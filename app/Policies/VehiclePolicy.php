@@ -105,4 +105,12 @@ class VehiclePolicy
     {
         return $user->can('reorder_vehicle');
     }
+
+    /**
+     * Determine whether the user can view maintenances.
+     */
+    public function viewMaintenances(User $user, Vehicle $vehicle): bool
+    {
+        return $user->can('view_maintenances_vehicle');
+    }
 }

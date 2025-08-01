@@ -2,31 +2,32 @@
 
 namespace App\Providers\Filament;
 
-use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
-use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Filament\Http\Middleware\Authenticate;
-use Filament\Http\Middleware\AuthenticateSession;
-use Filament\Http\Middleware\DisableBladeIconComponents;
-use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Panel;
+use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use App\Filament\Widgets\StatsOverview;
-use App\Filament\Widgets\VehicleStatusChart;
-use App\Filament\Widgets\LatestMaintenanceTable;
 use App\Filament\Widgets\TopMinesWidget;
-use App\Filament\Widgets\MaintenanceTrendChart;
 use App\Filament\Widgets\TopDriversWidget;
+use Filament\Http\Middleware\Authenticate;
 use App\Filament\Widgets\SystemAlertsWidget;
+use App\Filament\Widgets\VehicleStatusChart;
 use App\Filament\Widgets\RecentActivityWidget;
-use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
-use Illuminate\Cookie\Middleware\EncryptCookies;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Filament\Widgets\MaintenanceTrendChart;
 use Illuminate\Session\Middleware\StartSession;
+use App\Filament\Widgets\LatestMaintenanceTable;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use App\Filament\Widgets\InformationSistemWidget;
+use Filament\Http\Middleware\AuthenticateSession;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Http\Middleware\DisableBladeIconComponents;
+use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -48,16 +49,9 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                StatsOverview::class,
-                VehicleStatusChart::class,
-                LatestMaintenanceTable::class,
-                TopMinesWidget::class,
-                MaintenanceTrendChart::class,
-                TopDriversWidget::class,
-                SystemAlertsWidget::class,
-                RecentActivityWidget::class,
+                InformationSistemWidget::class,
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //  Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

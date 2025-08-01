@@ -309,12 +309,12 @@ class VehicleResource extends Resource
                     ->modalContent(function ($record) {
                         return view('livewire.mantenance_modal', ['record' => $record]);
                     })
-                    ->modalHeading(fn ($record) => 'Vehiculo:   '.$record->placa)
+                    ->modalHeading(fn ($record) => 'Mantenimientos - Vehículo: ' . $record->placa)
                     ->slideOver(true)
                     ->modalSubmitAction(false)
                     ->modalCancelAction(false)
-
-                    ->modalWidth(MaxWidth::SevenExtraLarge),
+                    ->modalWidth(MaxWidth::SevenExtraLarge)
+                    ->visible(fn($record) => !empty($record) && auth()->user()->hasAnyRole(['super_admin', 'Super Admin', 'Usuario'])),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()
