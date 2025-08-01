@@ -19,6 +19,11 @@ use Illuminate\Session\Middleware\StartSession;
 use App\Filament\Widgets\LatestMaintenanceTable;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Widgets\InformationSistemWidget;
+use App\Filament\Widgets\VehicleWindget;
+use App\Filament\Widgets\LatestVehiclesTable;
+use App\Filament\Widgets\MaintenanceWidget;
+use App\Filament\Widgets\MaintenanceChartWidget;
+use App\Filament\Widgets\LatestMaintenanceWidget;
 use Filament\Http\Middleware\AuthenticateSession;
 use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -50,6 +55,10 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 InformationSistemWidget::class,
+                VehicleWindget::class,
+
+                MaintenanceChartWidget::class,
+                LatestMaintenanceWidget::class,
                 Widgets\AccountWidget::class,
                 //  Widgets\FilamentInfoWidget::class,
             ])
