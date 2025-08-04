@@ -10,10 +10,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDriverMineAssigmentMine extends CreateRecord
 {
     protected static string $resource = DriverMineAssigmentMineResource::class;
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
+
     /**
      * Define la URL de redirección después de crear un registro
      *

@@ -313,7 +313,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
                             $vehicle = $this->record; // Asegúrate de tener el vehículo actual
-                            dd($vehicle);
+
                             return response()->streamDownload(function () use ($records) {
                                 echo Pdf::loadHtml(
                                     Blade::render('pdf.value-maintenance', [

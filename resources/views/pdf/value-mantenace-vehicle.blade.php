@@ -1,5 +1,5 @@
 <x-layout>
-    <div style="text-align: center; margin-bottom: 20px; nargin-top: -60px;">
+    <div style="text-align: center; margin-bottom: 20px; margin-top: -60px;">
         <h3>Valor de Mantenimiento del Vehículo</h3>
     </div>
     <div style="display: table; width: 100%;">
@@ -19,8 +19,7 @@
     </div>
     <br>
 
-    {{-- @php
-    for ($i = 1; $i <= 1000; $i++) { echo $i . '<br>' ; } @endphp --}} <table width="100%">
+    <table width="100%">
         <thead style="background-color: lightgray; font-size: 12px;">
             <tr>
                 <th>Descripcion</th>
@@ -35,9 +34,9 @@
             <tr>
                 <td>{{ $item->maintenanceItem->name }}</td>
                 <td>{{ $item->mileage }}</td>
-                <td style="  text-align: right;">{{ $item->Price_material }}</td>
-                <td style="  text-align: right;">{{ $item->workforce }}</td>
-                <td style="  text-align: right;">{{ $item->maintenance_cost }}</td>
+                <td style="text-align: right;">{{ $item->Price_material }}</td>
+                <td style="text-align: right;">{{ $item->workforce }}</td>
+                <td style="text-align: right;">{{ $item->maintenance_cost }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -50,32 +49,46 @@
                 <td style="text-align: right;"><strong>S/. {{ number_format($total , 2) }}</strong></td>
             </tr>
         </tfoot>
-        </table>
-        
-        <!-- Salto de página para las imágenes -->
-        <div style="page-break-before: always;"></div>
-        
-      
-   <!-- Contenedor para las imágenes que ocupen toda la página -->
-   <div style="width: 100%; text-align: center;">
+    </table>
+    
+    <!-- Salto de página para las imágenes -->
+    <div style="page-break-before: always;"></div>
+    
+    <!-- Contenedor para las imágenes que ocupen toda la página -->
+    <div style="width: 100%; text-align: center;">
 
 @foreach($record->maintenances as $item)
     @if($item->photo)
-        <div style="margin-bottom: 20px;">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->photo))) }}"
-                 style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-        </div>
+        @php
+            $photoPath = storage_path('app/public/' . $item->photo);
+        @endphp
+        @if(file_exists($photoPath) && is_readable($photoPath))
+            <div style="margin-bottom: 20px;">
+                @php
+                    $photoMime = mime_content_type($photoPath);
+                @endphp
+                <img src="data:{{ $photoMime }};base64,{{ base64_encode(file_get_contents($photoPath)) }}"
+                     style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+            </div>
+        @endif
     @endif
 
     @if($item->file)
-        <div style="margin-bottom: 20px;">
-            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->file))) }}"
-                 style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-        </div>
+        @php
+            $filePath = storage_path('app/public/' . $item->file);
+        @endphp
+        @if(file_exists($filePath) && is_readable($filePath))
+            <div style="margin-bottom: 20px;">
+                @php
+                    $fileMime = mime_content_type($filePath);
+                @endphp
+                <img src="data:{{ $fileMime }};base64,{{ base64_encode(file_get_contents($filePath)) }}"
+                     style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+            </div>
+        @endif
     @endif
 @endforeach
 
 </div>
-
 
 </x-layout>
