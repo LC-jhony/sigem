@@ -1,5 +1,24 @@
 <x-layout>
-    {{ $vehicle->placa }} - {{ $vehicle->brand }} - {{ $vehicle->model }} - {{ $vehicle->year }}
+       <div style="text-align: center; margin-bottom: 20px; nargin-top: -60px;">
+        <h3>Valor de Mantenimiento del Vehículo</h3>
+    </div>
+    <div style="display: table; width: 100%;">
+        <!-- Columna izquierda: Datos del vehículo -->
+        <div
+            style="display: table-cell; border: 1px solid #e0e0e0; padding: 12px; border-radius: 6px; background-color: #fdfdfd; vertical-align: top;">
+            <div
+                style="font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #111; border-bottom: 1px solid #ddd; padding-bottom: 4px;">
+                Vehículo
+            </div>
+            <div style="margin-bottom: 2px;"><strong>Placa:</strong> {{ $vehicle->placa }}</div>
+            <div style="margin-bottom: 2px;"><strong>Marca:</strong> {{ $vehicle->marca ?? '-' }}</div>
+            <div style="margin-bottom: 2px;"><strong>Unidad:</strong> {{ $vehicle->unidad ?? '-' }}</div>
+            <div style="margin-bottom: 2px;"><strong>Tarjeta Propiedad:</strong> {{ $vehicle->property_card ?? '-' }}
+            </div>
+        </div>
+    </div>
+    <br>
+
     <table width="100%">
         <thead style="background-color: lightgray;">
             <tr>
@@ -12,26 +31,47 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($records as $item)
-            <tr>
-                <td>{{ $item->maintenanceItem->name }}</td>
-                <td>{{ $item->mileage }}</td>
-                <td style="text-align: right;">{{ $item->Price_material }}</td>
-                <td style="text-align: right;">{{ $item->workforce }}</td>
-                <td style="text-align: right;">{{ $item->maintenance_cost }}</td>
-            </tr>
+            @foreach ($records as $item)
+                <tr>
+                    <td>{{ $item->maintenanceItem->name }}</td>
+                    <td>{{ $item->mileage }}</td>
+                    <td style="text-align: right;">{{ $item->Price_material }}</td>
+                    <td style="text-align: right;">{{ $item->workforce }}</td>
+                    <td style="text-align: right;">{{ $item->maintenance_cost }}</td>
+                </tr>
             @endforeach
         </tbody>
         @php
-        $total = collect($records)->sum('maintenance_cost');
+            $total = collect($records)->sum('maintenance_cost');
         @endphp
         <tfoot>
             <tr>
                 <td colspan="4" style="text-align: right;"><strong>Total general:</strong></td>
-                <td style="text-align: right;"><strong>S/. {{ number_format($total , 2) }}</strong></td>
+                <td style="text-align: right;"><strong>S/. {{ number_format($total, 2) }}</strong></td>
             </tr>
         </tfoot>
     </table>
+    <!-- Salto de página para las imágenes -->
+    <div style="page-break-before: always;"></div>
+    <!-- Contenedor para las imágenes que ocupen toda la página -->
+    <div style="width: 100%; text-align: center;">
 
+        @foreach ($records as $item)
+            @if ($item->photo)
+                <div style="margin-bottom: 20px;">
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->photo))) }}"
+                        style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+                </div>
+            @endif
+
+            @if ($item->file)
+                <div style="margin-bottom: 20px;">
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->file))) }}"
+                        style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+                </div>
+            @endif
+        @endforeach
+
+    </div>
 
 </x-layout>
