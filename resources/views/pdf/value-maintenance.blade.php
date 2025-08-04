@@ -1,5 +1,5 @@
 <x-layout>
-       <div style="text-align: center; margin-bottom: 20px; nargin-top: -60px;">
+    <div style="text-align: center; margin-bottom: 20px; margin-top: -60px;">
         <h3>Valor de Mantenimiento del Vehículo</h3>
     </div>
     <div style="display: table; width: 100%;">
@@ -27,7 +27,6 @@
                 <th>Precio Material</th>
                 <th>Mano de Obra</th>
                 <th>Costo Mantenimiento</th>
-
             </tr>
         </thead>
         <tbody>
@@ -35,14 +34,14 @@
                 <tr>
                     <td>{{ $item->maintenanceItem->name }}</td>
                     <td>{{ $item->mileage }}</td>
-                    <td style="text-align: right;">{{ $item->Price_material }}</td>
-                    <td style="text-align: right;">{{ $item->workforce }}</td>
-                    <td style="text-align: right;">{{ $item->maintenance_cost }}</td>
+                    <td style="text-align: right;">S/. {{ number_format($item->Price_material, 2) }}</td>
+                    <td style="text-align: right;">S/. {{ number_format($item->workforce, 2) }}</td>
+                    <td style="text-align: right;">S/. {{ number_format($item->maintenance_cost, 2) }}</td>
                 </tr>
             @endforeach
         </tbody>
         @php
-            $total = collect($records)->sum('maintenance_cost');
+            $total = $records->sum('maintenance_cost');
         @endphp
         <tfoot>
             <tr>
@@ -51,27 +50,33 @@
             </tr>
         </tfoot>
     </table>
-    <!-- Salto de página para las imágenes -->
-    <div style="page-break-before: always;"></div>
-    <!-- Contenedor para las imágenes que ocupen toda la página -->
-    <div style="width: 100%; text-align: center;">
 
-        @foreach ($records as $item)
-            @if ($item->photo)
-                <div style="margin-bottom: 20px;">
-                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->photo))) }}"
-                        style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-                </div>
-            @endif
+    @php
+        $hasImages = $records->filter(function($item) {
+            return $item->photo || $item->file;
+        })->count() > 0;
+    @endphp
 
-            @if ($item->file)
-                <div style="margin-bottom: 20px;">
-                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/' . $item->file))) }}"
-                        style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-                </div>
-            @endif
-        @endforeach
+    @if($hasImages)
+        <!-- Salto de página para las imágenes -->
+        <div style="page-break-before: always;"></div>
+        <!-- Contenedor para las imágenes que ocupen toda la página -->
+        <div style="width: 100%; text-align: center;">
+            @foreach ($records as $item)
+                @if ($item->photo)
+                    <div style="margin-bottom: 20px;">
+                        <img src="{{ storage_path('app/public/' . $item->photo) }}"
+                            style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+                    </div>
+                @endif
 
-    </div>
-
+                @if ($item->file)
+                    <div style="margin-bottom: 20px;">
+                        <img src="{{ storage_path('app/public/' . $item->file) }}"
+                            style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    @endif
 </x-layout>

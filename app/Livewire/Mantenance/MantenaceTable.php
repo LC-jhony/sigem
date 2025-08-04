@@ -51,27 +51,30 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->searchable(),
                 Tables\Columns\TextColumn::make('mileage')
                     ->label('KM')
-                    ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('status')
                     ->label('Estado')
-                    ->sortable()
+                    ->searchable()
                     ->boolean(),
                 Tables\Columns\TextColumn::make('Price_material')
                     ->label('Precio Material')
-                    ->sortable()
+                    ->prefix('S/.')
+                    ->numeric()
                     ->searchable()
-                    ->money('S/.', 2),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('workforce')
                     ->label('Mano de Obra')
-                    ->sortable()
+                    ->prefix('S/.')
+                    ->numeric()
                     ->searchable()
-                    ->money('S/.', 2),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('maintenance_cost')
                     ->label('Costo Total')
-                    ->sortable()
+                    ->prefix('S/.')
+                    ->numeric()
                     ->searchable()
-                    ->money('S/.', 2),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Fecha')
                     ->dateTime()
@@ -116,13 +119,14 @@ class MantenaceTable extends Component implements HasForms, HasTable
                             ->columns(2)
                             ->schema([
                                 Forms\Components\Select::make('vehicle_id')
-                                    ->label('Vehicle')
+                                    ->label('Vehiculo')
                                     ->options(Vehicle::all()->pluck('placa', 'id'))
                                     ->default(fn() => $this->record->id)
                                     ->disabled()
                                     ->dehydrated()
                                     ->required(),
                                 Forms\Components\Select::make('maintenance_item_id')
+                                    ->label('Mantenimiento')
                                     ->options(MaintenanceItem::all()->pluck('name', 'id'))
                                     ->label('Mantenimiento Item')
                                     ->searchable()
@@ -130,33 +134,26 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->native(false)
                                     ->required(),
                                 Forms\Components\Select::make('mileage')
+                                    ->label('Kilometro')
                                     ->options(MillageItems::class)
                                     ->searchable()
                                     ->preload()
                                     ->native(false)
                                     ->required(),
-                                // Forms\Components\Toggle::make('status')
-                                //     ->required()
-                                //     ->default(true),
-                                ButtonGroup::make('status')
+                                Forms\Components\Select::make('status')
+                                    ->label('Estado')
                                     ->options([
                                         '1' => 'Si',
                                         '0' => 'No',
                                     ])
-                                    ->onColor('primary')
-                                    ->offColor('gray')
-                                    ->gridDirection('row')
-                                    ->default('1')
-                                    ->icons([
-                                        '1' => 'heroicon-m-check-badge',
-                                        '0' => 'heroicon-m-x-circle',
-                                    ])
-                                    ->iconPosition(\Filament\Support\Enums\IconPosition::Before)
-                                    ->iconSize(IconSize::Medium),
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->default('1'),
                                 Forms\Components\Section::make('Costos')
                                     ->columns(3)
                                     ->schema([
                                         Forms\Components\TextInput::make('Price_material')
+                                            ->label('Precio Material')
                                             ->prefix('S/.')
                                             // ->inputMode('decimal')
                                             // ->mask(RawJs::make('$money($input, \',\')'))
@@ -167,6 +164,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                                 $set('maintenance_cost', floatval($state) + $workforce);
                                             }),
                                         Forms\Components\TextInput::make('workforce')
+                                            ->label('Mano de obra')
                                             ->prefix('S/.')
                                             // ->inputMode('decimal')
                                             // ->mask(RawJs::make('$money($input, ",")'))
@@ -177,6 +175,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                                 $set('maintenance_cost', floatval($state) + $workforce);
                                             }),
                                         Forms\Components\TextInput::make('maintenance_cost')
+                                            ->label('Costo total')
                                             ->prefix('S/.')
                                             ->inputMode('decimal')
                                             ->mask(RawJs::make('$money($input, ",")'))
@@ -199,8 +198,97 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->native(false),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->button()
+                    ->color('primary')
+                    ->form([
+                        Forms\Components\Section::make('Archivos')
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\FileUpload::make('photo')
+                                    ->label('Foto del Mantenimiento')
+                                    ->disk('public')
+                                    ->directory('maintenance/photos')
+                                    ->visibility('public')
+                                    ->default(null),
+                                Forms\Components\FileUpload::make('file')
+                                    ->label('Archivo del Mantenimiento')
+                                    ->disk('public')
+                                    ->directory('maintenance/files')
+                                    //->acceptedFileTypes(['application/pdf'])
+                                    ->maxSize(2048),
+                            ]),
+                        Forms\Components\Grid::make()
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\Select::make('vehicle_id')
+                                    ->label('Vehiculo')
+                                    ->options(Vehicle::all()->pluck('placa', 'id'))
+                                    ->default(fn() => $this->record->id)
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->required(),
+                                Forms\Components\Select::make('maintenance_item_id')
+                                    ->label('Mantenimiento')
+                                    ->options(MaintenanceItem::all()->pluck('name', 'id'))
+                                    ->label('Mantenimiento Item')
+                                    ->searchable()
+                                    ->preload()
+                                    ->native(false)
+                                    ->required(),
+                                Forms\Components\Select::make('mileage')
+                                    ->label('Kilometro')
+                                    ->options(MillageItems::class)
+                                    ->searchable()
+                                    ->preload()
+                                    ->native(false)
+                                    ->required(),
+                                Forms\Components\Select::make('status')
+                                    ->label('Estado')
+                                    ->options([
+                                        '1' => 'Si',
+                                        '0' => 'No',
+                                    ])
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->default('1'),
+                                Forms\Components\Section::make('Costos')
+                                    ->columns(3)
+                                    ->schema([
+                                        Forms\Components\TextInput::make('Price_material')
+                                            ->label('Precio Material')
+                                            ->prefix('S/.')
+                                            // ->inputMode('decimal')
+                                            // ->mask(RawJs::make('$money($input, \',\')'))
+                                            ->numeric()
+                                            ->reactive()
+                                            ->afterStateUpdated(function ($state, callable $set, $get) {
+                                                $workforce = floatval($get('workforce') ?? 0);
+                                                $set('maintenance_cost', floatval($state) + $workforce);
+                                            }),
+                                        Forms\Components\TextInput::make('workforce')
+                                            ->label('Mano de obra')
+                                            ->prefix('S/.')
+                                            // ->inputMode('decimal')
+                                            // ->mask(RawJs::make('$money($input, ",")'))
+                                            ->numeric()
+                                            ->reactive()
+                                            ->afterStateUpdated(function ($state, callable $set, $get) {
+                                                $workforce = floatval($get('Price_material') ?? 0);
+                                                $set('maintenance_cost', floatval($state) + $workforce);
+                                            }),
+                                        Forms\Components\TextInput::make('maintenance_cost')
+                                            ->label('Costo total')
+                                            ->prefix('S/.')
+                                            ->inputMode('decimal')
+                                            ->mask(RawJs::make('$money($input, ",")'))
+                                            ->numeric(),
+                                    ]),
+
+                            ]),
+
+                    ]),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -221,7 +309,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                         ->deselectRecordsAfterCompletion()
                         ->action(function (Collection $records) {
                             $vehicle = $this->record; // Asegúrate de tener el vehículo actual
-
+                            dd($vehicle);
                             return response()->streamDownload(function () use ($records) {
                                 echo Pdf::loadHtml(
                                     Blade::render('pdf.value-maintenance', [
@@ -229,7 +317,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                         'vehicle' => $this->record,
                                     ])
                                 )->stream();
-                            }, $vehicle->placa . '.pdf');
+                            }, $vehicle->placa . '-' . now()->format('Y-m-d') . '.pdf');
                         }),
                 ]),
             ]);
