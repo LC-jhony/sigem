@@ -39,25 +39,27 @@ class MaintenanceResource extends Resource
                             ->disk('public')
                             ->directory('maintenance/photos')
                             ->visibility('public')
-                            ->default(null),
+                            ->default(null)
+                            ->helperText(str('La Foto  **del Mantenimiento** debe de subirlo para el mantenimiento.')->inlineMarkdown()->toHtmlString()),
                         Forms\Components\FileUpload::make('file')
                             ->label('Archivo del Mantenimiento')
                             ->disk('public')
                             ->directory('maintenance/files')
                             //->acceptedFileTypes(['application/pdf'])
-                            ->maxSize(2048),
+                            ->helperText(str('El archivo  **Boleta, Factura** debe de subirlo para el mantenimiento.')->inlineMarkdown()->toHtmlString()),
                     ]),
                 Forms\Components\Grid::make()
                     ->columns(2)
                     ->schema([
                         Forms\Components\Select::make('vehicle_id')
-                            ->label('Vehicle')
+                            ->label('Vehiculo')
                             ->options(Vehicle::all()->pluck('placa', 'id'))
                             ->searchable()
                             ->preload()
                             ->native(false)
                             ->required(),
                         Forms\Components\Select::make('maintenance_item_id')
+                            ->label('Mantenimiento')
                             ->options(MaintenanceItem::all()->pluck('name', 'id'))
                             ->label('Mantenimiento')
                             ->searchable()
@@ -74,25 +76,22 @@ class MaintenanceResource extends Resource
                         // Forms\Components\Toggle::make('status')
                         //     ->required()
                         //     ->default(true),
-                        ButtonGroup::make('status')
+                        Forms\Components\Select::make('status')
+                            ->label('Estado')
                             ->options([
                                 '1' => 'Si',
                                 '0' => 'No',
                             ])
-                            ->onColor('primary')
-                            ->offColor('gray')
-                            ->gridDirection('row')
-                            ->default('1')
-                            ->icons([
-                                '1' => 'heroicon-m-check-badge',
-                                '0' => 'heroicon-m-x-circle',
-                            ])
-                            ->iconPosition(\Filament\Support\Enums\IconPosition::Before)
-                            ->iconSize(IconSize::Medium),
+                            ->disabled()
+                            ->dehydrated()
+                            ->default('1'),
                         Forms\Components\Section::make('Costos')
+                            ->description('Valorizado del Mantenimiento Vehicular')
+                            ->icon('heroicon-o-currency-dollar')
                             ->columns(3)
                             ->schema([
                                 Forms\Components\TextInput::make('Price_material')
+                                    ->label('Precio Material')
                                     ->prefix('S/.')
                                     // ->inputMode('decimal')
                                     // ->mask(RawJs::make('$money($input, \',\')'))
@@ -103,6 +102,7 @@ class MaintenanceResource extends Resource
                                         $set('maintenance_cost', floatval($state) + $workforce);
                                     }),
                                 Forms\Components\TextInput::make('workforce')
+                                    ->label('Mano de Obra')
                                     ->prefix('S/.')
                                     // ->inputMode('decimal')
                                     // ->mask(RawJs::make('$money($input, ",")'))
@@ -113,6 +113,7 @@ class MaintenanceResource extends Resource
                                         $set('maintenance_cost', floatval($state) + $workforce);
                                     }),
                                 Forms\Components\TextInput::make('maintenance_cost')
+                                    ->label('Costo Total')
                                     ->prefix('S/.')
                                     ->inputMode('decimal')
                                     ->mask(RawJs::make('$money($input, ",")'))

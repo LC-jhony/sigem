@@ -150,6 +150,8 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->dehydrated()
                                     ->default('1'),
                                 Forms\Components\Section::make('Costos')
+                                    ->description('Valorizado del Mantenimiento Vehicular')
+                                    ->icon('heroicon-o-currency-dollar')
                                     ->columns(3)
                                     ->schema([
                                         Forms\Components\TextInput::make('Price_material')
@@ -253,6 +255,8 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->dehydrated()
                                     ->default('1'),
                                 Forms\Components\Section::make('Costos')
+                                    ->description('Valorizado del Mantenimiento Vehicular')
+                                    ->icon('heroicon-o-currency-dollar')
                                     ->columns(3)
                                     ->schema([
                                         Forms\Components\TextInput::make('Price_material')
