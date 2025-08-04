@@ -22,7 +22,9 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-user-shield';
 
-    protected static ?string $navigationGroup = 'Filament Shield';
+    protected static ?string $navigationGroup = 'Roles y Permisos';
+
+    protected static ?string $modelLabel = 'Usuarios';
 
 
     public static function form(Form $form): Form
@@ -59,7 +61,7 @@ class UserResource extends Resource
                         Forms\Components\CheckboxList::make('roles')
                             ->relationship('roles', 'name')
                             ->searchable()
-                            ->columns(6),
+                            ->columns(2),
 
                     ]),
                 Forms\Components\Section::make('User New Password')
@@ -82,10 +84,10 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->striped()
-        ->paginated([5, 10, 25, 50, 100, 'all'])
-        ->defaultPaginationPageOption(5)
-        ->searchable()
+            ->striped()
+            ->paginated([5, 10, 25, 50, 100, 'all'])
+            ->defaultPaginationPageOption(5)
+            ->searchable()
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nombre')
@@ -93,9 +95,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Correo')
                     ->searchable(),
-                // Tables\Columns\TextColumn::make('email_verified_at')
-                //     ->dateTime()
-                //     ->sortable(),
+                Tables\Columns\TextColumn::make('email_verified_at')
+                    ->dateTime()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->label('Roles')
                     ->searchable(),

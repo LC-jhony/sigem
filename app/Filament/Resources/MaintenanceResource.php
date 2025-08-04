@@ -2,19 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Enum\MillageItems;
-use App\Filament\Resources\MaintenanceResource\Pages;
-use App\Models\Maintenance;
-use App\Models\MaintenanceItem;
-use App\Models\Vehicle;
 use Filament\Forms;
+use Filament\Tables;
+use App\Models\Vehicle;
 use Filament\Forms\Form;
+use App\Enum\MillageItems;
+use Filament\Tables\Table;
+use App\Models\Maintenance;
+use Filament\Support\RawJs;
+use App\Models\MaintenanceItem;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconSize;
-use Filament\Support\RawJs;
-use Filament\Tables;
-use Filament\Tables\Table;
 use Wallo\FilamentSelectify\Components\ButtonGroup;
+use App\Filament\Resources\MaintenanceResource\Pages;
+use Asmit\FilamentUpload\Forms\Components\AdvancedFileUpload;
 
 class MaintenanceResource extends Resource
 {
@@ -35,14 +36,15 @@ class MaintenanceResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('photo')
                             ->label('Foto del Mantenimiento')
+                            ->disk('public')
+                            ->directory('maintenance/photos')
                             ->visibility('public')
-                            ->directory('Mantenimiento')
                             ->default(null),
                         Forms\Components\FileUpload::make('file')
                             ->label('Archivo del Mantenimiento')
                             ->disk('public')
                             ->directory('maintenance/files')
-                            ->acceptedFileTypes(['application/pdf'])
+                            //->acceptedFileTypes(['application/pdf'])
                             ->maxSize(2048),
                     ]),
                 Forms\Components\Grid::make()

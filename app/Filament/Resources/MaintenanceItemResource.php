@@ -18,7 +18,7 @@ class MaintenanceItemResource extends Resource
 
     protected static ?string $navigationGroup = 'Mantenimiento';
 
-    protected static ?string $modelLabel = 'Lista';
+    protected static ?string $modelLabel = 'Lista de Mantenimiento';
 
     public static function form(Form $form): Form
     {

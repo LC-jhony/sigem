@@ -101,17 +101,15 @@ class MantenaceTable extends Component implements HasForms, HasTable
                             ->schema([
                                 Forms\Components\FileUpload::make('photo')
                                     ->label('Foto del Mantenimiento')
-                                    ->label('Documento')
-                                    // ->multiple()
-
+                                    ->disk('public')
+                                    ->directory('maintenance/photos')
                                     ->visibility('public')
-                                    ->directory('Mantenimiento')
                                     ->default(null),
                                 Forms\Components\FileUpload::make('file')
                                     ->label('Archivo del Mantenimiento')
                                     ->disk('public')
                                     ->directory('maintenance/files')
-                                    ->acceptedFileTypes(['application/pdf'])
+                                    //->acceptedFileTypes(['application/pdf'])
                                     ->maxSize(2048),
                             ]),
                         Forms\Components\Grid::make()
@@ -120,7 +118,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                 Forms\Components\Select::make('vehicle_id')
                                     ->label('Vehicle')
                                     ->options(Vehicle::all()->pluck('placa', 'id'))
-                                    ->default(fn () => $this->record->id)
+                                    ->default(fn() => $this->record->id)
                                     ->disabled()
                                     ->dehydrated()
                                     ->required(),
@@ -200,7 +198,10 @@ class MantenaceTable extends Component implements HasForms, HasTable
                     ->options(MaintenanceItem::all()->pluck('name', 'id'))
                     ->native(false),
             ])
-            ->actions([])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\BulkAction::make('delete')
@@ -228,7 +229,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                         'vehicle' => $this->record,
                                     ])
                                 )->stream();
-                            }, $vehicle->placa.'.pdf');
+                            }, $vehicle->placa . '.pdf');
                         }),
                 ]),
             ]);
