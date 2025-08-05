@@ -25,13 +25,13 @@ class DriverResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $modelLabel = 'Conductore';
+    protected static ?string $modelLabel = 'Empleado';
 
     protected static ?string $navigationGroup = 'Gestión de Personal';
 
     protected static ?int $navigationSort = 1; // To control the order within the group
 
-    protected static ?string $navigationLabel = 'Conductores'; // Custom label for navigation
+    // protected static ?string $navigationLabel = 'Conductores'; // Custom label for navigation
 
     public static function form(Form $form): Form
     {
@@ -114,12 +114,12 @@ class DriverResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('full_name')
                     ->label('Nombre')
-                    ->getStateUsing(fn ($record) => $record->name.' '.$record->last_paternal_name.' '.$record->last_maternal_name)
+                    ->getStateUsing(fn($record) => $record->name . ' ' . $record->last_paternal_name . ' ' . $record->last_maternal_name)
                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('dni')
                     ->label('DNI')
-                    ->numeric()
+
                     ->sortable(),
                 Tables\Columns\TextColumn::make('cargo.name')
                     ->label('Cargo')
@@ -164,9 +164,9 @@ class DriverResource extends Resource
             ->actions([
                 MediaAction::make('pdf')
                     ->label('')
-                    ->media(fn ($record) => $record->file ? asset('storage/'.$record->file) : null)
+                    ->media(fn($record) => $record->file ? asset('storage/' . $record->file) : null)
                     ->icon('bi-file-pdf-fill')
-                    ->visible(fn ($record) => ! empty($record->file)),
+                    ->visible(fn($record) => ! empty($record->file)),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
@@ -196,7 +196,7 @@ class DriverResource extends Resource
                                         ->heading('CARGO'),
 
                                 ])
-                                ->withFilename(date('Y-m-d').' - export'),
+                                ->withFilename(date('Y-m-d') . ' - export'),
                         ]),
                 ]),
             ]);
