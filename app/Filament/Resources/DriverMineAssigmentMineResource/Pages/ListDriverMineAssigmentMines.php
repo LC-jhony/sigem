@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\DriverMineAssigmentMineResource\Pages;
 
-use App\Filament\Resources\DriverMineAssigmentMineResource;
 use Filament\Actions;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
+use App\Livewire\DriveMineAssigmentReport;
+use App\Filament\Resources\DriverMineAssigmentMineResource;
 
 class ListDriverMineAssigmentMines extends ListRecords
 {
@@ -15,6 +17,16 @@ class ListDriverMineAssigmentMines extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('report')
+                ->label('Reporte')
+                ->modalHeading('Reporte asignacion de empleados a Minas')
+                ->icon('heroicon-o-document-text')
+                ->modalSubmitAction(false)
+                ->modalCancelAction(false)
+                //  ->modalWidth(MaxWidth::SevenExtraLarge)
+                ->icon('bi-file-pdf-fill')
+                ->color('danger')
+                ->modalContent(fn() => view('ReportManteneaceMineAssigment')),
             Actions\CreateAction::make()
                 ->icon('heroicon-o-squares-plus'),
         ];

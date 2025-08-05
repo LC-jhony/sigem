@@ -57,7 +57,6 @@ class DriverMineAssigmentMineResource extends Resource
                             ->columns(2),
                         Forms\Components\Section::make('Período de Asignación')
                             ->schema([
-
                                 Forms\Components\Select::make('month')
                                     ->label('Mes')
                                     ->options([
@@ -76,6 +75,7 @@ class DriverMineAssigmentMineResource extends Resource
                                     ])
                                     ->default(date('n'))
                                     ->required()
+                                    ->native(false)
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, Get $get) {
                                         self::updateDates($set, $get);
@@ -128,8 +128,16 @@ class DriverMineAssigmentMineResource extends Resource
                                 'Completedo' => 'Completado',
                                 'Cancelado' => 'Cancelado',
                             ])
-                            ->default('active')
-                            ->required(),
+                            ->default('Activo')
+                            ->required()
+                            ->native(false)
+                            ->live()
+                            ->afterStateUpdated(function (Set $set, Get $get) {
+                                // Independientemente del status, siempre usar mes y año actual
+                                $set('month', (int) date('n'));
+                                $set('year', (int) date('Y'));
+                                self::updateDates($set, $get);
+                            }),
                         Forms\Components\Textarea::make('notes')
                             ->label('Notas')
                             ->rows(3)
@@ -248,12 +256,32 @@ class DriverMineAssigmentMineResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('complete')
+                    ->label('Completar')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->button()
+                    ->visible(fn(DriverMineAssigment $record) => $record->status === 'Activo')
+                    ->requiresConfirmation()
+                    ->action(fn(DriverMineAssigment $record) => $record->update(['status' => 'Completedo'])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
+                    Tables\Actions\BulkAction::make('complete_selected')
+                        ->label('Completar Periodo')
+                        ->icon('heroicon-o-check')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->action(function ($records) {
+                            $records->each(function ($record) {
+                                if ($record->status === 'Activo') {
+                                    $record->update(['status' => 'Completedo']);
+                                }
+                            });
+                        })
                 ]),
             ]);
     }
