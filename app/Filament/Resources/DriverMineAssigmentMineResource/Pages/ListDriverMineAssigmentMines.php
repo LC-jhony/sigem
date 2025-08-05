@@ -24,19 +24,14 @@ class ListDriverMineAssigmentMines extends ListRecords
     {
         return [
             'all' => Tab::make('Todas')
-                ->badge(fn () => $this->getModel()::count()),
-
-            'active' => Tab::make('Activas')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'active'))
-                ->badge(fn () => $this->getModel()::where('status', 'active')->count()),
-
+                ->badge(fn() => $this->getModel()::count()),
             'current_month' => Tab::make('Mes Actual')
-                ->modifyQueryUsing(fn (Builder $query) => $query->currentMonth())
-                ->badge(fn () => $this->getModel()::currentMonth()->count()),
+                ->modifyQueryUsing(fn(Builder $query) => $query->currentMonth())
+                ->badge(fn() => $this->getModel()::currentMonth()->count()),
 
             'completed' => Tab::make('Completadas')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 'completed'))
-                ->badge(fn () => $this->getModel()::where('status', 'completed')->count()),
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('status', 'completed'))
+                ->badge(fn() => $this->getModel()::where('status', 'completed')->count()),
         ];
     }
 }

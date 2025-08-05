@@ -41,7 +41,7 @@ class DriverMineAssigmentMineResource extends Resource
                                 Forms\Components\Select::make('driver_id')
                                     ->label('Conductor')
                                     ->relationship('driver')
-                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name.' - '.$record->dni)
+                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->full_name . ' - ' . $record->dni)
                                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name', 'dni'])
                                     ->required()
                                     ->preload()
@@ -80,18 +80,20 @@ class DriverMineAssigmentMineResource extends Resource
                                     ->afterStateUpdated(function (Set $set, Get $get) {
                                         self::updateDates($set, $get);
                                     }),
-                                Forms\Components\Select::make('year')
+                                Forms\Components\TextInput::make('year')
                                     ->label('Año')
-                                    ->options(function () {
-                                        $currentYear = date('Y');
-                                        $years = [];
-                                        for ($i = $currentYear - 1; $i <= $currentYear + 2; $i++) {
-                                            $years[$i] = $i;
-                                        }
+                                    // ->options(function () {
+                                    //     $currentYear = date('Y');
+                                    //     $years = [];
+                                    //     for ($i = $currentYear - 1; $i <= $currentYear + 2; $i++) {
+                                    //         $years[$i] = $i;
+                                    //     }
 
-                                        return $years;
-                                    })
+                                    //     return $years;
+                                    // })
                                     ->default(date('Y'))
+                                    ->disabled()
+                                    ->dehydrated()
                                     ->required()
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, Get $get) {
@@ -185,23 +187,23 @@ class DriverMineAssigmentMineResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
-                    ->color(fn (string $state): string => match (strtolower($state)) {
+                    ->color(fn(string $state): string => match (strtolower($state)) {
                         'activo' => 'success',
                         'completado', 'completedo' => 'warning',
                         'cancelado' => 'danger',
                         default => 'secondary',
                     })
-                    ->formatStateUsing(fn (string $state): string => match (strtolower($state)) {
+                    ->formatStateUsing(fn(string $state): string => match (strtolower($state)) {
                         'activo' => 'Activo',
                         'completado', 'completedo' => 'Completado',
                         'cancelado' => 'Cancelado',
                         default => ucfirst($state),
                     }),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->label('Vigente')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle'),
+                // Tables\Columns\IconColumn::make('is_active')
+                //     ->label('Vigente')
+                //     ->boolean()
+                //     ->trueIcon('heroicon-o-check-circle')
+                //     ->falseIcon('heroicon-o-x-circle'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->sortable()

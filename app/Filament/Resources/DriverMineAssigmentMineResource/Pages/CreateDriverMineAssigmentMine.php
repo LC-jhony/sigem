@@ -37,6 +37,9 @@ class CreateDriverMineAssigmentMine extends CreateRecord
     {
         $data = $this->form->getState();
 
+        // Validar asignación duplicada (unique constraint)
+        $this->validateUniqueAssignment($data);
+
         // Validar conflictos de horarios
         $this->validateScheduleConflicts($data);
 
@@ -45,6 +48,32 @@ class CreateDriverMineAssigmentMine extends CreateRecord
 
         // Validar licencias del conductor
         $this->validateDriverLicenses($data);
+    }
+
+    private function validateUniqueAssignment(array $data): void
+    {
+        // Extraer año y mes de la fecha de inicio
+        $startDate = \Carbon\Carbon::parse($data['start_date']);
+        $year = $startDate->year;
+        $month = $startDate->month;
+
+        // Verificar si ya existe una asignación para este conductor en este período
+        $existingAssignment = DriverMineAssigment::where('driver_id', $data['driver_id'])
+            ->where('year', $year)
+            ->where('month', $month)
+            ->first();
+
+        if ($existingAssignment) {
+            $driver = \App\Models\Driver::find($data['driver_id']);
+            $mine = \App\Models\Mine::find($existingAssignment->mine_id);
+
+            Notification::make()
+                ->title('Asignación Duplicada')
+                ->body("El conductor {$driver->full_name} ya tiene una asignación en {$existingAssignment->month_name} {$existingAssignment->year} en la mina {$mine->name}. No se pueden crear asignaciones duplicadas para el mismo período.")
+                ->danger()
+                ->send();
+            $this->halt();
+        }
     }
 
     private function validateDriverLicenses(array $data): void
@@ -106,12 +135,12 @@ class CreateDriverMineAssigmentMine extends CreateRecord
      * Muestra una notificación de éxito confirmando que la asignación
      * ha sido creada correctamente.
      */
-    protected function afterCreate(): void
+
+    protected function getCreatedNotification(): ?Notification
     {
-        Notification::make()
+        return Notification::make()
             ->title('Asignación Creada')
             ->body('La asignación ha sido creada exitosamente.')
-            ->success()
-            ->send();
+            ->success();
     }
 }
