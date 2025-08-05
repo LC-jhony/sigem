@@ -135,12 +135,7 @@
     </div>
 
     @if($assignments->count() > 0)
-        <div class="summary">
-            <h3>Resumen</h3>
-            <p><strong>Total de asignaciones:</strong> {{ $assignments->count() }}</p>
-            <p><strong>Conductores activos:</strong> {{ $assignments->where('status', 'Activo')->count() }}</p>
-            <p><strong>Conductores inactivos:</strong> {{ $assignments->where('status', 'Inactivo')->count() }}</p>
-        </div>
+
 
         <div class="table-container">
             <table>
@@ -184,9 +179,6 @@
         </div>
     @endif
 
-    <div class="footer">
-        <p>Reporte generado automáticamente el {{ now()->format('d/m/Y') }} a las {{ now()->format('H:i') }}</p>
-        <p>Sistema de Gestión de Minas - SIGEM</p>
-    </div>
+
 </body>
 </html>
