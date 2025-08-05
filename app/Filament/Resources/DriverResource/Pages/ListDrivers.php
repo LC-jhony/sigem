@@ -34,7 +34,7 @@ class ListDrivers extends ListRecords
                             Column::make('cargo.name')
                                 ->heading('CARGO'),
                         ])
-                        ->withFilename(date('Y-m-d').' - export'),
+                        ->withFilename(date('Y-m-d') . ' - Empleados'),
                 ]),
             \EightyNine\ExcelImport\ExcelImportAction::make()
                 ->label('Importar')
