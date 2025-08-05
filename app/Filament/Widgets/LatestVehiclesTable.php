@@ -3,16 +3,15 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Vehicle;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Tables\Columns\TextColumn;
 
 class LatestVehiclesTable extends BaseWidget
 {
     protected static ?string $heading = 'Vehículos Recientes';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
@@ -55,7 +54,7 @@ class LatestVehiclesTable extends BaseWidget
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'Operativo' => 'success',
                         'En Mantenimiento' => 'warning',
                         'Fuera de Servicio' => 'danger',

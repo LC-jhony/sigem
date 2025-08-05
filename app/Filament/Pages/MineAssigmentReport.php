@@ -2,38 +2,48 @@
 
 namespace App\Filament\Pages;
 
-use Filament\Pages\Page;
-use Filament\Forms\Form;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use App\Models\Mine;
 use App\Models\DriverMineAssigment;
+use App\Models\Mine;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Actions;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Filament\Pages\Page;
 
 class MineAssigmentReport extends Page implements HasForms
 {
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'bi-file-pdf-fill';
+
     protected static string $view = 'filament.pages.mine-assigment-report';
+
     protected static ?string $navigationGroup = 'Gestión de Minas';
 
+    protected static ?string $navigationLabel = 'Reporte de Asignaciones';
+
+    protected static ?string $title = 'Reporte Asignaciones';
+
     public ?array $data = [];
+
     public $selectedMine = null;
+
     public $selectedMonth = null;
+
     public $selectedYear = null;
+
     public $previewData = [];
 
     public function mount(): void
     {
         $this->form->fill([
-            'year' => date('Y')
+            'year' => date('Y'),
         ]);
     }
 
@@ -52,7 +62,7 @@ class MineAssigmentReport extends Page implements HasForms
                             ->required()
                             ->native(false)
                             ->live()
-                            ->afterStateUpdated(fn() => $this->updatePreview()),
+                            ->afterStateUpdated(fn () => $this->updatePreview()),
                         Select::make('month')
                             ->label('Mes')
                             ->options([
@@ -69,16 +79,16 @@ class MineAssigmentReport extends Page implements HasForms
                                 11 => 'Noviembre',
                                 12 => 'Diciembre',
                             ])
-                            ->required()
+
                             ->live()
-                            ->afterStateUpdated(fn() => $this->updatePreview()),
+                            ->afterStateUpdated(fn () => $this->updatePreview()),
                         TextInput::make('year')
                             ->label('Año')
                             ->required()
                             ->numeric()
                             ->default(date('Y'))
                             ->live()
-                            ->afterStateUpdated(fn() => $this->updatePreview()),
+                            ->afterStateUpdated(fn () => $this->updatePreview()),
                         Actions::make([
                             // Action::make('preview')
                             //     ->label('Vista Previa')
@@ -89,10 +99,30 @@ class MineAssigmentReport extends Page implements HasForms
                                 ->label('Exportar PDF')
                                 ->icon('bi-file-pdf-fill')
                                 ->color('success')
-                                ->action('exportPdf')
-                                ->disabled(fn() => empty($this->previewData)),
+                                ->action(function () {
+                                    $data = $this->form->getState();
+
+                                    // Validar que todos los campos estén completos
+                                    if (empty($data['mine_id']) || empty($data['month']) || empty($data['year'])) {
+                                        Notification::make()
+                                            ->title('Error')
+                                            ->body('Por favor complete todos los campos antes de generar el PDF.')
+                                            ->danger()
+                                            ->send();
+
+                                        return;
+                                    }
+
+                                    // Generar la URL del PDF y abrir en nueva pestaña
+                                    $url = url("mineassigmentreport/{$data['mine_id']}")."?month={$data['month']}&year={$data['year']}";
+
+                                    // Usar JavaScript para abrir en nueva pestaña
+                                    $this->js("window.open('$url', '_blank');");
+                                }),
+
+                            // ->disabled(fn() => empty($this->previewData)),
                         ])->fullWidth(),
-                    ])
+                    ]),
             ])
             ->statePath('data');
     }
@@ -101,16 +131,17 @@ class MineAssigmentReport extends Page implements HasForms
     {
         $data = $this->form->getState();
 
-        if (!empty($data['mine_id']) && !empty($data['month']) && !empty($data['year'])) {
+        if (! empty($data['mine_id']) && ! empty($data['month']) && ! empty($data['year'])) {
             $this->selectedMine = Mine::find($data['mine_id']);
             $this->selectedMonth = $data['month'];
             $this->selectedYear = $data['year'];
 
             // Obtener datos de asignaciones para el preview
-            $this->previewData = DriverMineAssigment::with(['driver', 'mine'])
+            $this->previewData = DriverMineAssigment::with(['driver.cargo', 'mine'])
                 ->where('mine_id', $data['mine_id'])
                 ->whereMonth('created_at', $data['month'])
                 ->whereYear('created_at', $data['year'])
+                ->where('status', 'Activo')
                 ->get()
                 ->toArray();
         } else {
@@ -134,7 +165,7 @@ class MineAssigmentReport extends Page implements HasForms
         } else {
             Notification::make()
                 ->title('Vista previa actualizada')
-                ->body('Se encontraron ' . count($this->previewData) . ' asignaciones.')
+                ->body('Se encontraron '.count($this->previewData).' asignaciones.')
                 ->success()
                 ->send();
         }
@@ -148,6 +179,7 @@ class MineAssigmentReport extends Page implements HasForms
                 ->body('No hay datos para exportar. Genere primero la vista previa.')
                 ->danger()
                 ->send();
+
             return;
         }
 
@@ -159,7 +191,7 @@ class MineAssigmentReport extends Page implements HasForms
         ]);
 
         return response()->streamDownload(
-            fn() => print($pdf->output()),
+            fn () => print ($pdf->output()),
             "reporte_mina_{$this->selectedYear}_{$this->selectedMonth}.pdf"
         );
     }
@@ -178,7 +210,7 @@ class MineAssigmentReport extends Page implements HasForms
             9 => 'Septiembre',
             10 => 'Octubre',
             11 => 'Noviembre',
-            12 => 'Diciembre'
+            12 => 'Diciembre',
         ];
 
         return $months[$month] ?? '';

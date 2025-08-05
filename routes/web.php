@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\MaintenanceHistoryController;
+use App\Http\Controllers\MineAsigmentReportController;
 use App\Http\Controllers\ValueMaintenanceVehicleController;
 use App\Http\Controllers\VehicleDocumentPdf;
 use App\Livewire\Mantenance\MantenaceTable;
@@ -15,6 +16,8 @@ Route::get('maintenacehisrtory/{id}', MaintenanceHistoryController::class)
 Route::get('vehicledocument/pdf', VehicleDocumentPdf::class)
     ->name('vehicledocument.pdf');
 
+Route::get('mineassigmentreport/{id}', MineAsigmentReportController::class)
+    ->name('mineassigmentreport');
 // Route::get('/', function () {
 //     return view('welcome');
 // });

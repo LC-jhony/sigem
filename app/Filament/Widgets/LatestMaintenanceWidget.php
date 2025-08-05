@@ -10,6 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class LatestMaintenanceWidget extends BaseWidget
 {
     protected static ?string $heading = 'Últimos Mantenimientos';
+
     protected static ?int $sort = 1;
 
     public function table(Table $table): Table

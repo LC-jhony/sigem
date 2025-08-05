@@ -11,14 +11,16 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, WithChunkReading
+class DriverImport implements ToCollection, WithBatchInserts, WithChunkReading, WithHeadingRow
 {
     protected $additionalData = [];
+
     protected $customImportData = [];
+
     protected $importStats = [
         'total' => 0,
         'imported' => 0,
@@ -26,7 +28,9 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         'skipped' => 0,
         'errors' => 0,
     ];
+
     protected $validationErrors = [];
+
     protected $cargoCache = [];
 
     public function collection(Collection $rows)
@@ -61,13 +65,15 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
                     if (empty($dni) || empty($name)) {
                         $skippedCount++;
                         Log::info('Skipped empty row', ['row' => $rowNumber, 'data' => $row]);
+
                         continue;
                     }
 
                     // Validate row data
                     $validatedData = $this->validateRowData($row, $rowNumber);
-                    if (!$validatedData) {
+                    if (! $validatedData) {
                         $errorCount++;
+
                         continue;
                     }
 
@@ -82,6 +88,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
                             'row' => $rowNumber,
                             'data' => $row,
                         ]);
+
                         continue;
                     }
 
@@ -117,7 +124,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
                     }
                 } catch (ValidationException $e) {
                     $errorCount++;
-                    $errorMessage = 'Fila ' . $rowNumber . " con DNI {$dni}: " . implode(', ', $e->errors()['general'] ?? $e->errors());
+                    $errorMessage = 'Fila '.$rowNumber." con DNI {$dni}: ".implode(', ', $e->errors()['general'] ?? $e->errors());
                     $errors[] = $errorMessage;
                     $this->validationErrors[] = $errorMessage;
 
@@ -128,7 +135,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
                     ]);
                 } catch (\Exception $e) {
                     $errorCount++;
-                    $errorMessage = 'Fila ' . $rowNumber . " con DNI {$dni}: " . $e->getMessage();
+                    $errorMessage = 'Fila '.$rowNumber." con DNI {$dni}: ".$e->getMessage();
                     $errors[] = $errorMessage;
 
                     Log::error('Error importing driver', [
@@ -223,7 +230,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         $body = "Se encontraron {$duplicatesCount} registros duplicados en el archivo Excel y fueron omitidos.";
 
         if (count($exampleDnis) > 0) {
-            $body .= "\n\nEjemplos de DNIs duplicados: " . implode(', ', $exampleDnis);
+            $body .= "\n\nEjemplos de DNIs duplicados: ".implode(', ', $exampleDnis);
             if (count($uniqueDnis) > 3) {
                 $remaining = count($uniqueDnis) - 3;
                 $body .= " y {$remaining} más.";
@@ -245,9 +252,9 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
     {
         $body = "Se encontraron {$errorCount} registros con errores de validación.";
 
-        if (!empty($this->validationErrors)) {
+        if (! empty($this->validationErrors)) {
             $examples = array_slice($this->validationErrors, 0, 2);
-            $body .= "\n\nEjemplos de errores:\n• " . implode("\n• ", $examples);
+            $body .= "\n\nEjemplos de errores:\n• ".implode("\n• ", $examples);
 
             if (count($this->validationErrors) > 2) {
                 $remaining = count($this->validationErrors) - 2;
@@ -302,7 +309,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
             ]);
 
             if ($validator->fails()) {
-                $errorMessage = 'Fila ' . $rowNumber . ': ' . implode(', ', $validator->errors()->all());
+                $errorMessage = 'Fila '.$rowNumber.': '.implode(', ', $validator->errors()->all());
                 $this->validationErrors[] = $errorMessage;
 
                 Log::warning('Row validation failed', [
@@ -320,6 +327,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
                 'row' => $rowNumber,
                 'error' => $e->getMessage(),
             ]);
+
             return null;
         }
     }
@@ -333,7 +341,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         $cargoName = null;
 
         foreach ($cargoFields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 $cargoName = trim((string) $row[$field]);
                 break;
             }
@@ -344,7 +352,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         }
 
         // Use cache to avoid repeated database queries
-        if (!isset($this->cargoCache[$cargoName])) {
+        if (! isset($this->cargoCache[$cargoName])) {
             $this->cargoCache[$cargoName] = Cargo::firstOrCreate(
                 ['name' => $cargoName],
                 ['name' => $cargoName, 'status' => true]
@@ -362,7 +370,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         $dniFields = ['dni', 'documento', 'cedula', 'ci', 'numero_documento', 'document_number'];
 
         foreach ($dniFields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 $dni = trim((string) $row[$field]);
                 // Remove any non-numeric characters for consistency
                 $dni = preg_replace('/[^0-9]/', '', $dni);
@@ -391,7 +399,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return $this->sanitizeText((string) $row[$field]);
             }
         }
@@ -414,7 +422,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 return $this->sanitizeText((string) $row[$field]);
             }
         }
@@ -438,8 +446,9 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
         ];
 
         foreach ($fields as $field) {
-            if (!empty($row[$field])) {
+            if (! empty($row[$field])) {
                 $name = $this->sanitizeText((string) $row[$field]);
+
                 return $name ?? '';
             }
         }
@@ -524,7 +533,7 @@ class DriverImport implements ToCollection, WithHeadingRow, WithBatchInserts, Wi
      */
     public function hasValidationErrors(): bool
     {
-        return !empty($this->validationErrors);
+        return ! empty($this->validationErrors);
     }
 
     /**

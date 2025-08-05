@@ -135,7 +135,6 @@ class CreateDriverMineAssigmentMine extends CreateRecord
      * Muestra una notificación de éxito confirmando que la asignación
      * ha sido creada correctamente.
      */
-
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()

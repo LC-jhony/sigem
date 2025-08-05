@@ -41,8 +41,8 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="col-span-1">
             <!-- Form Section - Left Side -->
-            <div class="space-y-6">        
-                    {{ $this->form }}
+            <div class="space-y-6">
+                {{ $this->form }}
             </div>
         </div>
         <div class="col-span-1 md:col-span-2">
@@ -58,7 +58,7 @@
 
                     @if ($selectedMine && $selectedMonth && $selectedYear)
                         <!-- Report Header -->
-                       
+
 
                         <!-- Data Preview -->
                         @if (count($previewData) > 0)
@@ -88,10 +88,31 @@
                                                             class="group flex w-full items-center gap-x-1 whitespace-nowrap justify-start">
                                                             <span
                                                                 class="fi-ta-header-cell-label text-sm font-semibold text-gray-950 dark:text-white">
-                                                                Fecha
+                                                                DNI
                                                             </span>
                                                         </span>
                                                     </th>
+                                                    <th
+                                                        class="fi-ta-header-cell px-3 py-3.5 sm:first-of-type:ps-6 sm:last-of-type:pe-6">
+                                                        <span
+                                                            class="group flex w-full items-center gap-x-1 whitespace-nowrap justify-start">
+                                                            <span
+                                                                class="fi-ta-header-cell-label text-sm font-semibold text-gray-950 dark:text-white">
+                                                                Cargo
+                                                            </span>
+                                                        </span>
+                                                    </th>
+                                                    <th
+                                                        class="fi-ta-header-cell px-3 py-3.5 sm:first-of-type:ps-6 sm:last-of-type:pe-6">
+                                                        <span
+                                                            class="group flex w-full items-center gap-x-1 whitespace-nowrap justify-start">
+                                                            <span
+                                                                class="fi-ta-header-cell-label text-sm font-semibold text-gray-950 dark:text-white">
+                                                                Estado
+                                                            </span>
+                                                        </span>
+                                                    </th>
+                                               
                                                 </tr>
                                             </thead>
                                             <tbody
@@ -106,7 +127,7 @@
                                                                     <div class="flex">
                                                                         <div
                                                                             class="fi-ta-text-item inline-flex items-center gap-1.5 text-sm leading-6 text-gray-950 dark:text-white">
-                                                                            {{ $assignment['driver']['name'] ?? 'N/A' }}
+                                                                            {{ ($assignment['driver']['name'] ?? '') . ' ' . ($assignment['driver']['last_paternal_name'] ?? '') . ' ' . ($assignment['driver']['last_maternal_name'] ?? '') ?: 'N/A' }}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -118,13 +139,42 @@
                                                                 <div class="fi-ta-text grid w-full gap-y-1 px-3 py-4">
                                                                     <div class="flex">
                                                                         <div
-                                                                            class="fi-ta-text-item inline-flex items-center gap-1.5 text-sm leading-6 text-gray-500 dark:text-gray-400">
-                                                                            {{ \Carbon\Carbon::parse($assignment['created_at'])->format('d/m/Y') }}
+                                                                            class="fi-ta-text-item inline-flex items-center gap-1.5 text-sm leading-6 text-gray-950 dark:text-white">
+                                                                            {{ $assignment['driver']['dni'] ?? 'N/A' }}
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </td>
+                                                        <td
+                                                            class="fi-ta-cell p-0 first-of-type:ps-1 last-of-type:pe-1 sm:first-of-type:ps-3 sm:last-of-type:pe-3">
+                                                            <div class="fi-ta-col-wrp">
+                                                                <div class="fi-ta-text grid w-full gap-y-1 px-3 py-4">
+                                                                    <div class="flex">
+                                                                        <div
+                                                                            class="fi-ta-text-item inline-flex items-center gap-1.5 text-sm leading-6 text-gray-950 dark:text-white">
+                                                                            {{ $assignment['driver']['cargo']['name'] ?? 'N/A' }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td
+                                                            class="fi-ta-cell p-0 first-of-type:ps-1 last-of-type:pe-1 sm:first-of-type:ps-3 sm:last-of-type:pe-3">
+                                                            <div class="fi-ta-col-wrp">
+                                                                <div class="fi-ta-text grid w-full gap-y-1 px-3 py-4">
+                                                                    <div class="flex">
+                                                                        <div
+                                                                            class="fi-ta-text-item inline-flex items-center gap-1.5 text-sm leading-6 text-gray-950 dark:text-white">
+                                                                    
+                                                                                {{ $assignment['status'] ?? 'N/A' }}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                   
                                                     </tr>
                                                 @endforeach
                                             </tbody>
@@ -134,14 +184,13 @@
                             </div>
                         @else
                             <x-filament::badge color="warning" size="lg" class="w-full justify-center">
-                                <x-filament::icon  class="h-4 w-4 mr-2" />
+                                <x-filament::icon class="h-4 w-4 mr-2" />
                                 No se encontraron asignaciones para los parámetros seleccionados
                             </x-filament::badge>
                         @endif
                     @else
                         <div class="text-center py-12">
-                            <x-filament::icon 
-                                class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                            <x-filament::icon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
                             <h3 class="mt-2 text-sm font-medium text-gray-950 dark:text-white">Sin datos seleccionados
                             </h3>
                             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">

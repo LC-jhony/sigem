@@ -17,7 +17,8 @@ class VehicleDocumentPdf extends Controller
         $pdf = Pdf::loadView('pdf.vehehicledocuments', compact('vehicles'))
 
             ->setPaper('A4', 'landscape');
+
         return $pdf->stream();
-        //return $pdf->download('vehicle_documents-' . now()->format('Y-m-d') . '.pdf');
+        // return $pdf->download('vehicle_documents-' . now()->format('Y-m-d') . '.pdf');
     }
 }

@@ -114,7 +114,7 @@ class DriverResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('full_name')
                     ->label('Nombre')
-                    ->getStateUsing(fn($record) => $record->name . ' ' . $record->last_paternal_name . ' ' . $record->last_maternal_name)
+                    ->getStateUsing(fn ($record) => $record->name.' '.$record->last_paternal_name.' '.$record->last_maternal_name)
                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name'])
                     ->sortable(),
                 Tables\Columns\TextColumn::make('dni')
@@ -164,9 +164,9 @@ class DriverResource extends Resource
             ->actions([
                 MediaAction::make('pdf')
                     ->label('')
-                    ->media(fn($record) => $record->file ? asset('storage/' . $record->file) : null)
+                    ->media(fn ($record) => $record->file ? asset('storage/'.$record->file) : null)
                     ->icon('bi-file-pdf-fill')
-                    ->visible(fn($record) => ! empty($record->file)),
+                    ->visible(fn ($record) => ! empty($record->file)),
                 ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
@@ -196,7 +196,7 @@ class DriverResource extends Resource
                                         ->heading('CARGO'),
 
                                 ])
-                                ->withFilename(date('Y-m-d') . ' - export'),
+                                ->withFilename(date('Y-m-d').' - export'),
                         ]),
                 ]),
             ]);

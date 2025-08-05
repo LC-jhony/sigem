@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class ValueMaintenanceVehicleController extends Controller
 {

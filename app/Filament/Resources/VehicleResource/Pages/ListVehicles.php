@@ -21,15 +21,15 @@ class ListVehicles extends ListRecords
                 ->icon('bi-file-pdf-fill')
                 ->url(route('vehicledocument.pdf'))
                 ->openUrlInNewTab()
-                ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'Super Admin', 'Usuario', 'Mina'])),
+                ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'Super Admin', 'Usuario', 'Mina'])),
             Actions\Action::make('Excel')
                 ->label('Exportar Excel')
                 ->color('success')
                 ->icon('uiw-file-excel')
                 ->action(function () {
-                    return Excel::download(new VehicleDocumentExport, 'vehicle_documents-' . now()->format('Y-m-d') . '.xlsx');
+                    return Excel::download(new VehicleDocumentExport, 'vehicle_documents-'.now()->format('Y-m-d').'.xlsx');
                 })
-                ->visible(fn() => auth()->user()->hasAnyRole(['super_admin', 'Super Admin', 'Usuario', 'Mina'])),
+                ->visible(fn () => auth()->user()->hasAnyRole(['super_admin', 'Super Admin', 'Usuario', 'Mina'])),
 
             Actions\CreateAction::make()
                 ->icon('heroicon-o-squares-plus'),

@@ -8,8 +8,11 @@ use Filament\Widgets\ChartWidget;
 class MaintenanceChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'Mantenimientos  Vehículos';
+
     protected static ?int $sort = 1;
-    protected int | string | array $columnSpan = 'full';
+
+    protected int|string|array $columnSpan = 'full';
+
     protected function getData(): array
     {
         $vehicles = Vehicle::withCount('maintenances')
@@ -32,7 +35,7 @@ class MaintenanceChartWidget extends ChartWidget
                         '#84CC16',
                         '#F97316',
                         '#EC4899',
-                        '#6366F1'
+                        '#6366F1',
                     ],
                 ],
             ],

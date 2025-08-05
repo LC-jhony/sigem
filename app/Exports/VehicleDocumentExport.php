@@ -3,18 +3,18 @@
 namespace App\Exports;
 
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithColumnWidths;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class VehicleDocumentExport implements FromCollection, WithHeadings, WithMapping, WithStyles, WithColumnWidths
+class VehicleDocumentExport implements FromCollection, WithColumnWidths, WithHeadings, WithMapping, WithStyles
 {
     public function collection()
     {
@@ -94,7 +94,7 @@ class VehicleDocumentExport implements FromCollection, WithHeadings, WithMapping
         $sheet->getStyle('A1:N3')->getFill()->getStartColor()->setRGB('F2F2F2');
 
         // Bordes para toda la tabla
-        $sheet->getStyle('A1:N' . ($sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        $sheet->getStyle('A1:N'.($sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Combinar celdas para el título principal
         $sheet->mergeCells('A1:F1');
@@ -139,56 +139,56 @@ class VehicleDocumentExport implements FromCollection, WithHeadings, WithMapping
         $sheet->getRowDimension('3')->setRowHeight(25);
 
         // Estilos para los datos
-        $sheet->getStyle('A4:N' . ($sheet->getHighestRow()))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('A4:N' . ($sheet->getHighestRow()))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('A4:N'.($sheet->getHighestRow()))->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A4:N'.($sheet->getHighestRow()))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
         // Aplicar colores según el estado de los documentos
         $highestRow = $sheet->getHighestRow();
         for ($row = 4; $row <= $highestRow; $row++) {
             // SOAT
-            $soatDias = $sheet->getCell('H' . $row)->getValue();
+            $soatDias = $sheet->getCell('H'.$row)->getValue();
             if (is_numeric($soatDias) && $soatDias < 0) {
-                $sheet->getStyle('G' . $row . ':H' . $row)->getFont()->getColor()->setRGB('FF0000');
+                $sheet->getStyle('G'.$row.':H'.$row)->getFont()->getColor()->setRGB('FF0000');
             } elseif (is_numeric($soatDias) && $soatDias <= 30) {
-                $sheet->getStyle('G' . $row . ':H' . $row)->getFont()->getColor()->setRGB('FFA500');
+                $sheet->getStyle('G'.$row.':H'.$row)->getFont()->getColor()->setRGB('FFA500');
             } else {
-                $sheet->getStyle('G' . $row . ':H' . $row)->getFont()->getColor()->setRGB('008000');
+                $sheet->getStyle('G'.$row.':H'.$row)->getFont()->getColor()->setRGB('008000');
             }
 
             // TARJETA DE CIRCULACION
-            $circulacionDias = $sheet->getCell('J' . $row)->getValue();
+            $circulacionDias = $sheet->getCell('J'.$row)->getValue();
             if (is_numeric($circulacionDias) && $circulacionDias < 0) {
-                $sheet->getStyle('I' . $row . ':J' . $row)->getFont()->getColor()->setRGB('FF0000');
+                $sheet->getStyle('I'.$row.':J'.$row)->getFont()->getColor()->setRGB('FF0000');
             } elseif (is_numeric($circulacionDias) && $circulacionDias <= 30) {
-                $sheet->getStyle('I' . $row . ':J' . $row)->getFont()->getColor()->setRGB('FFA500');
+                $sheet->getStyle('I'.$row.':J'.$row)->getFont()->getColor()->setRGB('FFA500');
             } else {
-                $sheet->getStyle('I' . $row . ':J' . $row)->getFont()->getColor()->setRGB('008000');
+                $sheet->getStyle('I'.$row.':J'.$row)->getFont()->getColor()->setRGB('008000');
             }
 
             // REVICION TECNICA
-            $revisionDias = $sheet->getCell('L' . $row)->getValue();
+            $revisionDias = $sheet->getCell('L'.$row)->getValue();
             if (is_numeric($revisionDias) && $revisionDias < 0) {
-                $sheet->getStyle('K' . $row . ':L' . $row)->getFont()->getColor()->setRGB('FF0000');
+                $sheet->getStyle('K'.$row.':L'.$row)->getFont()->getColor()->setRGB('FF0000');
             } elseif (is_numeric($revisionDias) && $revisionDias <= 30) {
-                $sheet->getStyle('K' . $row . ':L' . $row)->getFont()->getColor()->setRGB('FFA500');
+                $sheet->getStyle('K'.$row.':L'.$row)->getFont()->getColor()->setRGB('FFA500');
             } else {
-                $sheet->getStyle('K' . $row . ':L' . $row)->getFont()->getColor()->setRGB('008000');
+                $sheet->getStyle('K'.$row.':L'.$row)->getFont()->getColor()->setRGB('008000');
             }
 
             // POLIZA DE SEGURO VEHICULAR
-            $polizaDias = $sheet->getCell('N' . $row)->getValue();
+            $polizaDias = $sheet->getCell('N'.$row)->getValue();
             if (is_numeric($polizaDias) && $polizaDias < 0) {
-                $sheet->getStyle('M' . $row . ':N' . $row)->getFont()->getColor()->setRGB('FF0000');
+                $sheet->getStyle('M'.$row.':N'.$row)->getFont()->getColor()->setRGB('FF0000');
             } elseif (is_numeric($polizaDias) && $polizaDias <= 30) {
-                $sheet->getStyle('M' . $row . ':N' . $row)->getFont()->getColor()->setRGB('FFA500');
+                $sheet->getStyle('M'.$row.':N'.$row)->getFont()->getColor()->setRGB('FFA500');
             } else {
-                $sheet->getStyle('M' . $row . ':N' . $row)->getFont()->getColor()->setRGB('008000');
+                $sheet->getStyle('M'.$row.':N'.$row)->getFont()->getColor()->setRGB('008000');
             }
         }
 
         // Agregar números de fila en la columna COD
         for ($row = 4; $row <= $highestRow; $row++) {
-            $sheet->setCellValue('A' . $row, $row - 3);
+            $sheet->setCellValue('A'.$row, $row - 3);
         }
     }
 

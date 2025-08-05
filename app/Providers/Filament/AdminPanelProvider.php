@@ -2,37 +2,27 @@
 
 namespace App\Providers\Filament;
 
-use Filament\Pages;
-use Filament\Panel;
-use Filament\Widgets;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
-use App\Filament\Widgets\StatsOverview;
-use App\Filament\Widgets\TopMinesWidget;
-use App\Filament\Widgets\TopDriversWidget;
-use Filament\Http\Middleware\Authenticate;
-use App\Filament\Widgets\SystemAlertsWidget;
-use App\Filament\Widgets\VehicleStatusChart;
-use App\Filament\Widgets\RecentActivityWidget;
-use App\Filament\Widgets\MaintenanceTrendChart;
-use Illuminate\Session\Middleware\StartSession;
-use App\Filament\Widgets\LatestMaintenanceTable;
-use Illuminate\Cookie\Middleware\EncryptCookies;
 use App\Filament\Widgets\InformationSistemWidget;
-use App\Filament\Widgets\VehicleWindget;
-use App\Filament\Widgets\LatestVehiclesTable;
-use App\Filament\Widgets\MaintenanceWidget;
-use App\Filament\Widgets\MaintenanceChartWidget;
 use App\Filament\Widgets\LatestMaintenanceWidget;
-use Filament\Http\Middleware\AuthenticateSession;
-use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
+use App\Filament\Widgets\MaintenanceChartWidget;
+use App\Filament\Widgets\VehicleWindget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-use Illuminate\Routing\Middleware\SubstituteBindings;
-use Illuminate\View\Middleware\ShareErrorsFromSession;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
+use Filament\Http\Middleware\Authenticate;
+use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Filament\Pages;
+use Filament\Panel;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
+use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,9 +33,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('/')
             ->login()
-            //->registration()
-            //->passwordReset()
-            //->emailVerification()
+            // ->registration()
+            // ->passwordReset()
+            // ->emailVerification()
             ->profile()
             ->colors([
                 'primary' => Color::Indigo,
@@ -85,7 +75,7 @@ class AdminPanelProvider extends PanelProvider
                     ->gridColumns([
                         'default' => 1,
                         'sm' => 2,
-                        'lg' => 3
+                        'lg' => 3,
                     ])
                     ->sectionColumnSpan(1)
                     ->checkboxListColumns([

@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Mine;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
-// implements FilamentUser, MustVerifyEmail
+    // implements FilamentUser, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasRoles, HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,10 +37,12 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
     public function mina()
     {
         return $this->belongsTo(Mine::class, 'mine_id');
     }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -54,7 +55,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public  function canAccessPanel(Panel $panel): bool
+
+    public function canAccessPanel(Panel $panel): bool
     {
         return true;
     }

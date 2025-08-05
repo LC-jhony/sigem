@@ -41,7 +41,7 @@ class DriverMineAssigmentMineResource extends Resource
                                 Forms\Components\Select::make('driver_id')
                                     ->label('Conductor')
                                     ->relationship('driver')
-                                    ->getOptionLabelFromRecordUsing(fn($record) => $record->full_name . ' - ' . $record->dni)
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name.' - '.$record->dni)
                                     ->searchable(['name', 'last_paternal_name', 'last_maternal_name', 'dni'])
                                     ->required()
                                     ->preload()
@@ -195,13 +195,13 @@ class DriverMineAssigmentMineResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
-                    ->color(fn(string $state): string => match (strtolower($state)) {
+                    ->color(fn (string $state): string => match (strtolower($state)) {
                         'activo' => 'success',
                         'completado', 'completedo' => 'warning',
                         'cancelado' => 'danger',
                         default => 'secondary',
                     })
-                    ->formatStateUsing(fn(string $state): string => match (strtolower($state)) {
+                    ->formatStateUsing(fn (string $state): string => match (strtolower($state)) {
                         'activo' => 'Activo',
                         'completado', 'completedo' => 'Completado',
                         'cancelado' => 'Cancelado',
@@ -261,9 +261,9 @@ class DriverMineAssigmentMineResource extends Resource
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->button()
-                    ->visible(fn(DriverMineAssigment $record) => $record->status === 'Activo')
+                    ->visible(fn (DriverMineAssigment $record) => $record->status === 'Activo')
                     ->requiresConfirmation()
-                    ->action(fn(DriverMineAssigment $record) => $record->update(['status' => 'Completedo'])),
+                    ->action(fn (DriverMineAssigment $record) => $record->update(['status' => 'Completedo'])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -281,7 +281,7 @@ class DriverMineAssigmentMineResource extends Resource
                                     $record->update(['status' => 'Completedo']);
                                 }
                             });
-                        })
+                        }),
                 ]),
             ]);
     }

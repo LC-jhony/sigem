@@ -9,7 +9,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Support\Enums\IconSize;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Support\RawJs;
 use Filament\Tables;
@@ -20,7 +19,6 @@ use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Livewire\Component;
-use Wallo\FilamentSelectify\Components\ButtonGroup;
 
 class MantenaceTable extends Component implements HasForms, HasTable
 {
@@ -112,7 +110,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->label('Archivo del Mantenimiento')
                                     ->disk('public')
                                     ->directory('maintenance/files')
-                                    //->acceptedFileTypes(['application/pdf'])
+                                    // ->acceptedFileTypes(['application/pdf'])
                                     ->maxSize(2048),
                             ]),
                         Forms\Components\Grid::make()
@@ -121,7 +119,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                 Forms\Components\Select::make('vehicle_id')
                                     ->label('Vehiculo')
                                     ->options(Vehicle::all()->pluck('placa', 'id'))
-                                    ->default(fn() => $this->record->id)
+                                    ->default(fn () => $this->record->id)
                                     ->disabled()
                                     ->dehydrated()
                                     ->required(),
@@ -217,7 +215,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                     ->label('Archivo del Mantenimiento')
                                     ->disk('public')
                                     ->directory('maintenance/files')
-                                    //->acceptedFileTypes(['application/pdf'])
+                                    // ->acceptedFileTypes(['application/pdf'])
                                     ->maxSize(2048),
                             ]),
                         Forms\Components\Grid::make()
@@ -226,7 +224,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                 Forms\Components\Select::make('vehicle_id')
                                     ->label('Vehiculo')
                                     ->options(Vehicle::all()->pluck('placa', 'id'))
-                                    ->default(fn() => $this->record->id)
+                                    ->default(fn () => $this->record->id)
                                     ->disabled()
                                     ->dehydrated()
                                     ->required(),
@@ -321,7 +319,7 @@ class MantenaceTable extends Component implements HasForms, HasTable
                                         'vehicle' => $this->record,
                                     ])
                                 )->stream();
-                            }, $vehicle->placa . '-' . now()->format('Y-m-d') . '.pdf');
+                            }, $vehicle->placa.'-'.now()->format('Y-m-d').'.pdf');
                         }),
                 ]),
             ]);

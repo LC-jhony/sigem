@@ -2,19 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rules\Password;
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\CreateUser;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\UserResource\Pages\EditUser;
+use App\Models\User;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
@@ -25,7 +23,6 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Roles y Permisos';
 
     protected static ?string $modelLabel = 'Usuarios';
-
 
     public static function form(Form $form): Form
     {
@@ -54,8 +51,8 @@ class UserResource extends Resource
                             ->label('Contraseña')
                             ->password()
                             ->required()
-                            ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                            ->visible(fn($livewire) => $livewire instanceof CreateUser)
+                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->visible(fn ($livewire) => $livewire instanceof CreateUser)
                             ->rule(Password::default()),
 
                         Forms\Components\CheckboxList::make('roles')
@@ -70,14 +67,14 @@ class UserResource extends Resource
                             ->label('Nueva Contraseña')
                             ->nullable()
                             ->password()
-                            ->visible(fn($livewire) => $livewire instanceof EditUser)
+                            ->visible(fn ($livewire) => $livewire instanceof EditUser)
                             ->rule(Password::default()),
                         Forms\Components\TextInput::make('new_password_confirmation')
                             ->label('Confirmar Contraseña')
                             ->password()
                             ->same('new_password')
                             ->requiredWith('new_password'),
-                    ])
+                    ]),
             ]);
     }
 
