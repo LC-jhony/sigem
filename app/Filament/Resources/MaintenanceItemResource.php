@@ -24,7 +24,7 @@ class MaintenanceItemResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('Registrar el Mantenimiento')
+                Forms\Components\Section::make('Registrar el Mantenimiento')
                     ->schema([
                         Forms\Components\TextInput::make('name')
                             ->label('Nombre')
