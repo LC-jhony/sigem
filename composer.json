@@ -12,6 +12,7 @@
         "asmit/filament-upload": "^1.0",
         "barryvdh/laravel-dompdf": "^3.1",
         "bezhansalleh/filament-shield": "^3.3",
+        "codeat3/blade-iconpark": "^1.7",
         "codeat3/blade-uiw-icons": "^1.6",
         "davidhsianturi/blade-bootstrap-icons": "^2.1",
         "diogogpinto/filament-auth-ui-enhancer": "^1.0",

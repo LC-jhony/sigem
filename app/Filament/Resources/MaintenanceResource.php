@@ -7,6 +7,7 @@ use App\Filament\Resources\MaintenanceResource\Pages;
 use App\Models\Maintenance;
 use App\Models\MaintenanceItem;
 use App\Models\Vehicle;
+use App\Tables\Columns\BrakePadProgress;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -82,6 +83,34 @@ class MaintenanceResource extends Resource
                             ->disabled()
                             ->dehydrated()
                             ->default('1'),
+                        Forms\Components\Section::make('Pastilla de Freno')
+                            ->icon('iconpark-brakepads-o')
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('front_left_brake_pad')
+                                    ->label('Pastilla delantera izquierda')
+                                    ->prefix('%')
+                                    ->numeric(),
+                                Forms\Components\TextInput::make('front_right_brake_pad')
+                                    ->label('Pastilla delantera derecha')
+                                    ->prefix('%')
+                                    ->numeric(),
+                                Forms\Components\TextInput::make('rear_left_brake_pad')
+                                    ->label('Pastilla trasera izquierda')
+                                    ->prefix('%')
+                                    ->numeric(),
+                                Forms\Components\TextInput::make('rear_right_brake_pad')
+                                    ->label('Pastilla trasera derecha')
+                                    ->prefix('%')
+                                    ->numeric(),
+                                Forms\Components\DatePicker::make('brake_pads_checked_at')
+                                    ->label('Fecha de Verificación')
+                                    ->default(now())
+                                    ->disabled()
+                                    ->dehydrated()
+                                    ->required()
+                                    ->native(false),
+                            ]),
                         Forms\Components\Section::make('Costos')
                             ->description('Valorizado del Mantenimiento Vehicular')
                             ->icon('heroicon-o-currency-dollar')
@@ -141,10 +170,10 @@ class MaintenanceResource extends Resource
                     ->label('KM')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('status')
-                    ->label('Estado')
-                    ->searchable()
-                    ->boolean(),
+                // Tables\Columns\IconColumn::make('status')
+                //     ->label('Estado')
+                //     ->searchable()
+                //     ->boolean(),
                 Tables\Columns\TextColumn::make('Price_material')
                     ->label('Precio Material')
                     ->prefix('S/.')
@@ -163,9 +192,14 @@ class MaintenanceResource extends Resource
                     ->numeric()
                     ->searchable()
                     ->sortable(),
-                // Tables\Columns\TextColumn::make('photo')
+                BrakePadProgress::make('brake_pad_progress'),
+                // Tables\Columns\TextColumn::make('front_left_brake_pad')
                 //     ->searchable(),
-                // Tables\Columns\TextColumn::make('file')
+                // Tables\Columns\TextColumn::make('front_right_brake_pad')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('rear_left_brake_pad')
+                //     ->searchable(),
+                // Tables\Columns\TextColumn::make('rear_right_brake_pad')
                 //     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Fecha')
