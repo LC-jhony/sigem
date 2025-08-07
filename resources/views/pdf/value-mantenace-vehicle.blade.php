@@ -58,34 +58,18 @@
     <div style="width: 100%; text-align: center;">
 
 @foreach($record->maintenances as $item)
-    @if($item->photo)
-        @php
-            $photoPath = storage_path('app/public/' . $item->photo);
-        @endphp
-        @if(file_exists($photoPath) && is_readable($photoPath))
-            <div style="margin-bottom: 20px;">
-                @php
-                    $photoMime = mime_content_type($photoPath);
-                @endphp
-                <img src="data:{{ $photoMime }};base64,{{ base64_encode(file_get_contents($photoPath)) }}"
-                     style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-            </div>
-        @endif
+    @if($item->processed_photo)
+        <div style="margin-bottom: 20px;">
+            <img src="data:{{ $item->processed_photo['mime'] }};base64,{{ $item->processed_photo['data'] }}"
+                 style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+        </div>
     @endif
 
-    @if($item->file)
-        @php
-            $filePath = storage_path('app/public/' . $item->file);
-        @endphp
-        @if(file_exists($filePath) && is_readable($filePath))
-            <div style="margin-bottom: 20px;">
-                @php
-                    $fileMime = mime_content_type($filePath);
-                @endphp
-                <img src="data:{{ $fileMime }};base64,{{ base64_encode(file_get_contents($filePath)) }}"
-                     style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
-            </div>
-        @endif
+    @if($item->processed_file)
+        <div style="margin-bottom: 20px;">
+            <img src="data:{{ $item->processed_file['mime'] }};base64,{{ $item->processed_file['data'] }}"
+                 style="width: 90%; max-width: 500px; border: 1px solid #ccc; padding: 5px;">
+        </div>
     @endif
 @endforeach
 

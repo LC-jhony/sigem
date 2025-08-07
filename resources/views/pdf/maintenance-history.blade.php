@@ -25,12 +25,12 @@
                 <tr>
                     <th rowspan="2">#</th>
                     <th rowspan="2">Descripción</th>
-                    @foreach ([7500,15000,22500,30000,37500,45000,52500,60000,67500,75000,82500,90000,97500,105000,112500,120000,127500,135000,142500,150000,157500,165000] as $i => $km)
+                    @foreach ($mileages as $i => $km)
                     <th>{{ $i % 2 == 0 ? 'L' : 'M' }}</th>
                     @endforeach
                 </tr>
                 <tr>
-                    @foreach ([7500,15000,22500,30000,37500,45000,52500,60000,67500,75000,82500,90000,97500,105000,112500,120000,127500,135000,142500,150000,157500,165000] as $km)
+                    @foreach ($mileages as $km)
                     <th>{{ number_format($km) }}</th>
                     @endforeach
                 </tr>
@@ -41,9 +41,10 @@
                 <tr>
                     <td>{{ $item->id }}</td>
                     <td>{{ $item->name }}</td>
-                    @foreach ([7500,15000,22500,30000,37500,45000,52500,60000,67500,75000,82500,90000,97500,105000,112500,120000,127500,135000,142500,150000,157500,165000] as $km)
+                    @foreach ($mileages as $km)
                     @php
-                    $hasMaintenance = $record->maintenances->where('maintenance_item_id', $item->id)->where('mileage', $km)->count() > 0;
+                    $key = $item->id . '_' . $km;
+                    $hasMaintenance = isset($maintenanceMap[$key]);
                     @endphp
                     <td style="padding: 6px; border: 1px solid #ddd; text-align: center;">
                         @if($hasMaintenance)
