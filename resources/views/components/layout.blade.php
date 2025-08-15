@@ -1,121 +1,122 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reporte</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" href="{{ public_path('print_pdf.css') }}" type="text/css">
+<style>
+       :root {
+       --primary: #2c3e50;
+       --secondary: #3498db;
+       --success: #27ae60;
+       --warning: #f39c12;
+       --danger: #e74c3c;
+       --light: #f8f9fa;
+       --gray: #95a5a6;
+       --border: #e0e6ed;
+   }
+      .page {
+       page-break-after: always;
+       max-width: 1000px;
+       margin: 0 auto;
+       position: relative;
+       padding-top: 10px;
+   }
+    .header {
+       background: #f9f9f9;
+       color: white;
+       padding: 20px;
+   }
 
-    <style>
-        body {
-            padding-top: 60px;
-            /* Espacio suficiente para el header fijo en TODAS las páginas */
-            padding-bottom: 45px;
-            /* Para no chocar con el footer */
-        }
+   .header-top {
+       display: table;
+       width: 100%;
+   }
+   
+   .logo {
+       display: table-cell;
+       vertical-align: middle;
+   }
+   .logo-text {
+       font-size: 20px;
+       font-weight: bold;
+       margin-left: 10px;
+       display: inline-block;
+       vertical-align: middle;
+   }
 
-        h3 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #222;
-        }
+   .report-title {
+       display: table-cell;
+       text-align: right;
+       vertical-align: middle;
+   }
 
-        /** Margins for the PDF pages */
-        @page {
-            margin: 100px 50px 70px 50px;
-        }
+   .report-title h1 {
+       font-size: 20px;
+       font-weight: bold;
+       margin-bottom: 5px;
+       color: #0f172a;
+   }
 
-        header {
-            position: fixed;
-            top: -50px;
-            left: 0px;
-            right: 0px;
-            height: 85px;
-            padding: 5px 20px;
-            overflow: hidden;
-            /* ← Clave para evitar que se desborde */
-        }
+   .report-number {
+       background: #243c94;
+       color: #fff;
+       padding: 6px 10px;
+       border-radius: 8px;
+       font-size: 12px;
+       display: inline-block;
+   }
 
-        footer {
-            position: fixed;
-            bottom: -60px;
-            left: 0px;
-            right: 0px;
-            height: 50px;
-            padding: 10px 20px;
-            font-size: 9pt;
-            text-align: center;
-        }
+   .vehicle-info {
 
-        .header-container {
-            display: table;
-            width: 100%;
-        }
+       /* margin-top   : 10px; */
+       /* border       : 1px solid #ccc;
+      border-radius: 8px; */
+       padding: 10px;
+       font-size: 12px;
+   }
 
-        .header-cell {
-            display: table-cell;
-            vertical-align: top;
-        }
+   .info-item {
+       text-align: center;
+       padding: 6px;
+       color: #666;
+       width: 22%;
+       display: inline-block;
+       vertical-align: top;
+       margin-top: 10px;
+       border: 1px solid #ccc;
+       border-radius: 8px;
+   }
 
-        .logo {
+   .info-label {
+       font-weight: bold;
+       color: #666;
+       font-size: 11px;
+   }
 
+   .highlight {
+       color: #1e40af;
+       font-weight: bold;
+   }
 
-            text-align: center;
-            line-height: 80px;
-            font-size: 10pt;
-        }
+   .section {
+       margin-bottom: 15px;
+   }
 
-        .center-space {
-            width: 100%;
-        }
-
-        .company-info {
-            text-align: right;
-            font-size: 8pt;
-            line-height: 1.2em;
-            padding-right: 5px;
-            width: 230px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        .company-info .name {
-            font-weight: bold;
-            font-size: 9pt;
-            margin-bottom: 3px;
-        }
-
-        .company-info .info-group>div {
-            margin: 1px 0;
-        }
-
-        .expired {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-
-        .warning {
-            color: #f39c12;
-            font-weight: bold;
-        }
-
-        .valid {
-            color: #27ae60;
-        }
-
-        main {
-            margin-top: 30px;
-            font-size: 10pt;
-        }
-
-        .footer span {
-            font-weight: bold;
-        }
-
-        table {
-
+   .section-title {
+       font-size: 12px;
+       font-weight: 700;
+       padding: 6px 10px;
+       background-color: #f8f9fa;
+       border-radius: 4px;
+       margin-bottom: 10px;
+       display: flex;
+       align-items: center;
+       gap: 6px;
+       color: var(--primary);
+       border-left: 3px solid var(--secondary);
+   }
+     .table {
+   width: 100%;
             font-size: xx-small;
             border-collapse: collapse;
         }
@@ -126,7 +127,9 @@
         }
 
         thead tr th {
+            background-color: var(--primary);
             border: 1px solid #ddd;
+            color: var(--light)
         }
 
 
@@ -139,46 +142,25 @@
         tfoot tr td {
             font-weight: 100;
             font-size: x-small;
-        }
-
-        .gray {
-            background-color: lightgray;
-        }
-
-    </style>
+        } 
+</style>
 </head>
 
 <body>
-
-    <header>
-        <div class="header-container">
-            <div class="header-cell" style="width: 90px;">
-                <div class="logo">
-                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.png'))) }}" alt="Logo" style="width: 90px; height: auto;">
+    <div class="header">
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('img/logo.png'))) }}"
+                        alt="Logo" style="width: 140px;">
                 </div>
             </div>
-            <div class="header-cell center-space"></div>
-            <div class="header-cell company-info">
-                <div class="name">Shinra Electric Power Company</div>
-                <div class="info-group">
-                    <div>Rep: John Doe</div>
-                    <div>Midgar Sector 5, Reactor St.</div>
-                    <div>RFC: SHN-00112233</div>
-                    <div>Tel: (555) 123-4567</div>
-                    <div>Fax: (555) 987-6543</div>
-                </div>
-            </div>
+         {{ $head }}
         </div>
-    </header>
 
-
-    <footer>
-
-    </footer>
-
-    <main>
-        {{ $slot }}
-    </main>
-
+    </div> <br>
+    {{ $slot }}
+    </div>
 </body>
+
 </html>

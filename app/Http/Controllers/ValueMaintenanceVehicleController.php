@@ -96,7 +96,7 @@ class ValueMaintenanceVehicleController extends Controller
             $record->setRelation('maintenances', $processedMaintenances);
 
             // Optimización 4: Configuración PDF optimizada
-            $pdf = Pdf::loadView('pdf.value-mantenace-vehicle-optimized', [
+            $pdf = Pdf::loadView('pdf.value-mantenace-vehicle-fast', [
                 'record' => $record,
             ])
                 ->setOptions([

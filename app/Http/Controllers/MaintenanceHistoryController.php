@@ -49,7 +49,7 @@ class MaintenanceHistoryController extends Controller
         }
 
         // Configurar opciones optimizadas para DomPDF
-        $pdf = Pdf::loadView('pdf.maintenance-history-optimized', compact(
+        $pdf = Pdf::loadView('pdf.history_maintenance', compact(
             'record',
             'maintenanceitems',
             'maintenanceMatrix',
