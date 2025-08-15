@@ -30,11 +30,11 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('file')->nullable();
             // Pastillas de freno delanteras
-            $table->integer('front_left_brake_pad');
-            $table->integer('front_right_brake_pad');
+            $table->integer('front_left_brake_pad')->nullable();
+            $table->integer('front_right_brake_pad')->nullable();
             // Pastillas de freno traseras
-            $table->integer('rear_left_brake_pad');
-            $table->integer('rear_right_brake_pad');
+            $table->integer('rear_left_brake_pad')->nullable();
+            $table->integer('rear_right_brake_pad')->nullable();
             // Fecha de último registro
             $table->timestamp('brake_pads_checked_at')->nullable()->comment('Fecha de último registro de pastillas');
             $table->timestamps();
