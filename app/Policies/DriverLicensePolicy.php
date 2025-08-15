@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\DriverLicense;
 use App\Models\User;
+use App\Models\DriverLicense;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DriverLicensePolicy

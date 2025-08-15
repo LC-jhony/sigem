@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\MaintenanceHistoryController;
 use App\Http\Controllers\MineAsigmentReportController;
+use App\Http\Controllers\PrintMaintenanceController;
 use App\Http\Controllers\ValueMaintenanceVehicleController;
 use App\Http\Controllers\VehicleDocumentPdf;
 use App\Livewire\Mantenance\MantenaceTable;
@@ -18,6 +19,8 @@ Route::get('vehicledocument/pdf', VehicleDocumentPdf::class)
 
 Route::get('mineassigmentreport/{id}', MineAsigmentReportController::class)
     ->name('mineassigmentreport');
+
+Route::get('/print-maintenance-vehicle', PrintMaintenanceController::class)->name('print-maintenance-vehicle');
 // Route::get('/', function () {
 //     return view('welcome');
 // });

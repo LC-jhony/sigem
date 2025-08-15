@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\DriverMineAssigment;
 use App\Models\User;
+use App\Models\DriverMineAssigment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DriverMineAssigmentPolicy
